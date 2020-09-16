@@ -1,0 +1,17 @@
+version: '3'
+services:
+  laravel:
+    image: whitetumbler-dev:latest
+    ports:
+      - 8081:80
+    volumes:
+      - './:/var/www'
+  postgres:
+    image: postgres:12.3-alpine
+    environment:
+      POSTGRES_PASSWORD: 5ecr3t
+      POSTGRES_USER: dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
