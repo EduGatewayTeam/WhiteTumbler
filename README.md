@@ -1,6 +1,7 @@
 
 # WhiteTumbler: easy control of BigBlueButton
 
+[![CodeFactor](https://www.codefactor.io/repository/github/sevgatewayteam/whitetumbler/badge)](https://www.codefactor.io/repository/github/sevgatewayteam/whitetumbler)
 
 ## Development with XAMPP
 
@@ -9,3 +10,8 @@
 1. Extract archive to root of disk `С:\` with file replacement
 1. Run xampp, then you will be able to use phpPgAdmin on http://127.0.0.1/phpPgAdmin/
 1. Default user and password is root:root
+
+## Development with Docker
+
+1. Copy and rename docker-compose.yml.example to docker-compose.yml
+1. Run docker-compose up -d
