@@ -1,7 +1,7 @@
 
-# WhiteTumbler: easy control of BigBlueButton
+[![CodeFactor](https://www.codefactor.io/repository/github/edugatewayteam/whitetumbler/badge)](https://www.codefactor.io/repository/github/edugatewayteam/whitetumbler)
 
-[![CodeFactor](https://www.codefactor.io/repository/github/sevgatewayteam/whitetumbler/badge)](https://www.codefactor.io/repository/github/sevgatewayteam/whitetumbler)
+# WhiteTumbler: easy control of BigBlueButton
 
 ## Development with XAMPP
 
