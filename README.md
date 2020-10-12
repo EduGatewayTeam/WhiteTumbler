@@ -14,4 +14,4 @@
 ## Development with Docker
 
 1. Copy and rename docker-compose.yml.example to docker-compose.yml
-1. Run docker-compose up -d
+1. Run docker-compose build && docker-compose up -d

@@ -1,6 +1,7 @@
 version: '3'
 services:
   laravel:
+    build: ./docker/dev
     image: whitetumbler-dev:latest
     ports:
       - 8081:80
