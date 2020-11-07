@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         App\Providers\AnnotationsServiceProvider::class,
+        \SocialiteProviders\Manager\ServiceProvider::class,
 
         /*
          * Application Service Providers...
