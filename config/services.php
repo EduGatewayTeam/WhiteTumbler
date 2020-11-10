@@ -29,11 +29,19 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
-    'keycloak' => [
-        'base_url' => env('KEYCLOAK_BASE_URL'),
-        'client_id' => env('KEYCLOAK_CLIENT_ID'),
-        'client_secret' => env('KEYCLOAK_CLIENT_SECRET'),
-        'redirect' => env('KEYCLOAK_REDIRECT_URI')
+    'student-provider' => [
+        'base_url' => env('STUDENT_KEYCLOAK_BASE_URL'),
+        'realms' => env('STUDENT_KEYCLOAK_REALM'),
+        'client_id' => env('STUDENT_KEYCLOAK_CLIENT_ID'),
+        'client_secret' => env('STUDENT_KEYCLOAK_CLIENT_SECRET'),
+        'redirect' => env('STUDENT_KEYCLOAK_REDIRECT_URI'),
+    ],
+    'lecturer-provider' => [
+        'base_url' => env('LECTURER_KEYCLOAK_BASE_URL'),
+        'realms' => env('LECTURER_KEYCLOAK_REALM'),
+        'client_id' => env('LECTURER_KEYCLOAK_CLIENT_ID'),
+        'client_secret' => env('LECTURER_KEYCLOAK_CLIENT_SECRET'),
+        'redirect' => env('LECTURER_KEYCLOAK_REDIRECT_URI'),
     ],
 
 ];
