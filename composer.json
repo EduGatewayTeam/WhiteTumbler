@@ -23,7 +23,6 @@
         "laravel/tinker": "^2.0",
         "laravelcollective/annotations": "^8.0",
         "livewire/livewire": "^2.2",
-        "ocramius/package-versions": "1.0.0",
         "socialiteproviders/keycloak": "^4.0",
         "spatie/laravel-permission": "^3.17"
     },
