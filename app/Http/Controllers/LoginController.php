@@ -4,15 +4,19 @@
 namespace App\Http\Controllers;
 
 
+use App\User;
+use Collective\Annotations\Routing\Annotations\Annotations\Any;
 use Collective\Annotations\Routing\Annotations\Annotations\Get;
+use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
 
     /**
-     * @Get("/login/{provider}", middleware="web")
+     * @Get("/login/{provider}", middleware="web", as="login")
      * @param $provider
      * @return mixed
      */
@@ -26,13 +30,31 @@ class LoginController extends Controller
     /**
      * @Get("/login/{provider}/callback", middleware="web")
      * @param $provider
-     * @return JsonResponse
+     * @param EntityManagerInterface $em
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function handleProviderCallback($provider)
+    public function handleProviderCallback($provider, EntityManagerInterface $em)
     {
-        $user = Socialite::driver($provider)->user();
+        $socialiteUser = Socialite::driver($provider)->user();
+        $uuid = $socialiteUser->getId();
 
-        // $user->token;
-        return new JsonResponse($user);
+        $repository = $em->getRepository(User::class);
+        $user = $repository->find($uuid);
+        if ($user == null) {
+            $user = new User($uuid);
+            $em->persist($user);
+        }
+
+        Auth::login($user);
+
+        return redirect()->intended(route('index'));
+    }
+
+    /**
+     * @Any("/logout", middleware="web", as="logout")
+     */
+    public function logout() {
+        Auth::logout();
+        return redirect(route('index'));
     }
 }
