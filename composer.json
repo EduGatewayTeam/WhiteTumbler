@@ -16,15 +16,16 @@
         "friendsofphp/php-cs-fixer": "^2.16",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "laravel-doctrine/acl": "1.*",
         "laravel-doctrine/extensions": "1.3.*",
+        "laravel-doctrine/migrations": "^2.2",
         "laravel-doctrine/orm": "1.7.*",
         "laravel/framework": "^8.0",
         "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.0",
         "laravelcollective/annotations": "^8.0",
         "livewire/livewire": "^2.2",
-        "socialiteproviders/keycloak": "^4.0",
-        "spatie/laravel-permission": "^3.17"
+        "socialiteproviders/keycloak": "^4.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

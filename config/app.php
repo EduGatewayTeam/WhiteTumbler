@@ -1,5 +1,7 @@
 <?php
 
+use SocialiteProviders\Manager\ServiceProvider;
+
 return [
 
     /*
@@ -161,13 +163,14 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
 
         /*
          * Package Service Providers...
          */
         App\Providers\AnnotationsServiceProvider::class,
-        \SocialiteProviders\Manager\ServiceProvider::class,
+        ServiceProvider::class,
+        LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
+        LaravelDoctrine\ACL\AclServiceProvider::class,
 
         /*
          * Application Service Providers...

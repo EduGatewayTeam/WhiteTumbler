@@ -3,6 +3,17 @@
 
 # WhiteTumbler: easy control of BigBlueButton
 
+## Doctrine
+
+### Migrations
+
+Running migrations: 
+```
+php artisan doctrine:migrations:migrate
+```
+
+More documentation on [official site](http://www.laraveldoctrine.org/docs/1.4/migrations/introduction)
+
 ## Development with XAMPP
 
 1. Download xampp [installer](https://downloadsapachefriends.global.ssl.fastly.net/7.4.10/xampp-windows-x64-7.4.10-0-VC15-installer.exe?from_af=true) and install in path `C:\xampp`
