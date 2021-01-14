@@ -43,6 +43,7 @@ class LoginController extends Controller
         if ($user == null) {
             $user = new User($uuid);
             $em->persist($user);
+            $em->flush();
         }
 
         Auth::login($user);
