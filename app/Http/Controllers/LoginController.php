@@ -16,7 +16,17 @@ class LoginController extends Controller
 {
 
     /**
-     * @Get("/login/{provider}", middleware="web", as="login")
+     * @Get("/login", as="login")
+     */
+    public function loginPage() {
+        if (Auth::user() != null) {
+            return redirect(route('index'));
+        }
+        return view('login');
+    }
+
+    /**
+     * @Get("/login/{provider}", middleware="web", as="external_auth")
      * @param $provider
      * @return mixed
      */
