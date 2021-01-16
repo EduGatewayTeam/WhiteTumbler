@@ -5,8 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
+    @stack('components')
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
-    @yield('page')
+<body id="app" class="bg-light container-xl">
+@yield('page')
+
+<script src="{{ asset('/js/app.js') }}"></script>
+@stack('scripts')
 </body>
