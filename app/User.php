@@ -4,15 +4,16 @@
 namespace App;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Class User
- * @package App
+ * @package App\Models
  *
  * @ORM\Entity
- * @ORM\Table(name="""user""")
+ * @ORM\Table(name="users")
  */
 class User implements Authenticatable
 {
@@ -28,9 +29,15 @@ class User implements Authenticatable
      */
     protected $rememberToken;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Room", mappedBy="creator")
+     */
+    protected $rooms;
+
     public function __construct($id)
     {
         $this->id = $id;
+        $this->rooms = new ArrayCollection();
     }
 
     public function getAuthIdentifierName()
@@ -81,5 +88,10 @@ class User implements Authenticatable
     public function getRememberTokenName()
     {
         return 'rememberToken';
+    }
+
+    public function getRooms()
+    {
+        return $this->rooms;
     }
 }

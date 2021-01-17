@@ -7,10 +7,10 @@
         <div class="text-center fs-4 col">{{ __('auth.not-logged') }}</div>
         <div class="text-center fs-4 col">{{ __('auth.login-as') }}</div>
 
-        <a href="{{ route('external_auth', ["provider" => "student-provider"]) }}" class="btn btn-primary mt-3 col col-md-6 offset-md-3 col-sm-8 offset-sm-2">
+        <a href="{{ route('external_auth', ["provider" => "student-provider"]) }}" class="btn text-gray-50 bg-blue-500 bg-blue-600-hover mt-3 col col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             {{ __('auth.student-login') }}
         </a>
-        <a href="{{ route('external_auth', ["provider" => "lecturer-provider"]) }}" class="btn btn-primary mt-3 col col-md-6 offset-md-3 col-sm-8 offset-sm-2">
+        <a href="{{ route('external_auth', ["provider" => "lecturer-provider"]) }}" class="btn text-gray-50 bg-blue-500 bg-blue-600-hover mt-3 col col-md-6 offset-md-3 col-sm-8 offset-sm-2">
             {{ __('auth.lecturer-login') }}
         </a>
     </div>

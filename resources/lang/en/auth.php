@@ -6,6 +6,7 @@ return [
     'login-as' => 'Login as',
     'student-login' => 'Student',
     'lecturer-login' => 'Lecturer',
+    'logout' => 'Logout',
 
     'failed' => 'These credentials do not match our records.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',

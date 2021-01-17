@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ asset('/css/app.css') }}">
     @stack('components')
 </head>
-<body id="app" class="bg-light container-xl">
+<body id="app" class="bg-gray-100 container-xl">
 @yield('page')
 
 <script src="{{ asset('/js/app.js') }}"></script>

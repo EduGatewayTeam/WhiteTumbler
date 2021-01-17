@@ -25,7 +25,8 @@
         "laravel/tinker": "^2.0",
         "laravelcollective/annotations": "^8.0",
         "livewire/livewire": "^2.2",
-        "socialiteproviders/keycloak": "^4.0"
+        "socialiteproviders/keycloak": "^4.0",
+        "ext-json": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
