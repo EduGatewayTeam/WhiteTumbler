@@ -3,6 +3,7 @@
 
 namespace App;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="rooms")
  */
-class Room
+class Room implements \JsonSerializable
 {
     /**
      * @var integer id
@@ -20,7 +21,7 @@ class Room
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected $id;
+    public $id;
 
     /**
      * @var string
@@ -33,6 +34,16 @@ class Room
      * @ORM\ManyToOne(targetEntity="User", inversedBy="rooms")
      */
     protected $creator;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Meeting", mappedBy="room")
+     */
+    protected $meetings;
+
+    public function __construct()
+    {
+        $this->meetings = new ArrayCollection();
+    }
 
     /**
      * @return string
@@ -56,5 +67,22 @@ class Room
     public function setCreator(User $creator): void
     {
         $this->creator = $creator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMeetings()
+    {
+        return $this->meetings;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'meetings' => $this->getMeetings()->toArray()
+        ];
     }
 }

@@ -1,20 +1,13 @@
 import '../scss/app.scss'
 import 'bootstrap'
-import { createApp } from 'vue'
+import Vue from 'vue'
 import axios from 'axios'
-import VueAxios from 'vue-axios'
 
 const api = axios.create()
 api.defaults.withCredentials = true
 api.defaults.headers.common['Content-Type'] = 'application/json'
 
-const app = createApp({
-    data() {
-        return {}
-    }
-}).use(VueAxios, api)
-
-app.component('w-rooms', {
+Vue.component('w-rooms', {
     template: '#rooms-template',
     props: {
         roomsInit: Array
@@ -27,7 +20,11 @@ app.component('w-rooms', {
             errors: {
                 request: '',
                 roomName: ''
-            }
+            },
+            activeRoom: null,
+            activeRoomIndex: null,
+            newMeetingProcessing: false,
+            meetingName: '',
         }
     },
     mounted() {
@@ -36,7 +33,7 @@ app.component('w-rooms', {
     methods: {
         createRoom() {
             this.roomCreateProcessing = true
-            this.axios.post('/rooms', {
+            api.post('/rooms', {
                 name: this.roomName
             }).then((response) => {
                 if (response.data.errors) {
@@ -55,8 +52,40 @@ app.component('w-rooms', {
             }).then(() => {
                 this.roomCreateProcessing = false
             })
+        },
+        openRoom(roomIndex) {
+            this.activeRoom = this.rooms[roomIndex]
+            this.activeRoomIndex = roomIndex
+            $('#roomPage').modal('show')
+            console.log(this.activeRoom.name)
+        },
+        addMeeting() {
+            this.newMeetingProcessing = true
+            api.post('/meetings', {
+                roomId: this.activeRoom.id,
+                name: this.meetingName
+            }).then((response) => {
+                if (response.data.errors) {
+                    // this.errors = response.data.errors
+                } else {
+                    this.activeRoom.meetings.push(response.data)
+                    Vue.set(this.rooms, this.activeRoomIndex, this.activeRoom)
+                    // this.errors = {}
+                    this.meetingName = ''
+                }
+                console.log(response)
+            }).catch((error) => {
+                this.errors = {
+                    request: error
+                }
+            }).then(() => {
+                this.newMeetingProcessing = false
+            })
         }
     }
 })
 
-app.mount('#app')
+const app = new Vue({
+    el: '#app'
+})
+

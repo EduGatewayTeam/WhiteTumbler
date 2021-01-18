@@ -241,9 +241,15 @@ $utilities: map-merge(
 @import "~bootstrap-icons/font/bootstrap-icons";
 
 .modal-open {
-    overflow: scroll;
+    overflow: inherit;
 }
 
 body {
     padding-right: 12px !important;  // bootstrap modal fix
 }
+
+.spinner-border-24 {
+    width: 24px;
+    height: 24px;
+}
+

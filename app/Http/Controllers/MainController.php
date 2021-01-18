@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use Collective\Annotations\Routing\Annotations\Annotations\Get;
 use Collective\Annotations\Routing\Annotations\Annotations\Middleware;
+use Illuminate\Support\Facades\Auth;
 
 class MainController extends Controller
 {
@@ -17,7 +18,14 @@ class MainController extends Controller
      */
     public function redirectToProvider()
     {
-        return view('index');
+        $rooms = array_map(function ($room) {
+            return [
+                'id' => $room->id,
+                'name' => $room->name,
+                'meetings' => $room->getMeetings()->toArray()
+            ];
+        }, Auth::user()->getRooms()->toArray());
+        return view('index', ['rooms' => $rooms]);
     }
 
 }
