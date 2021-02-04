@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Meeting;
 use App\Room;
 use App\User;
+use BigBlueButton\BigBlueButton;
+use BigBlueButton\Parameters\CreateMeetingParameters;
+use BigBlueButton\Parameters\JoinMeetingParameters;
+use Collective\Annotations\Routing\Annotations\Annotations\Get;
 use Collective\Annotations\Routing\Annotations\Annotations\Middleware;
 use Collective\Annotations\Routing\Annotations\Annotations\Post;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,6 +49,36 @@ class MeetingsController extends Controller
         $em->flush();
 
         return new JsonResponse($meeting);
+    }
+
+
+    /**
+     * @param $meetingId
+     * @param EntityManagerInterface $em
+     * @return mixed
+     * @Get("/meetings/{meetingId}/join", middleware="web", as="join_meeting")
+     * @Middleware("auth")
+     */
+    public function join($meetingId, EntityManagerInterface $em) {
+        $repository = $em->getRepository(Meeting::class);
+        $meeting = $repository->find($meetingId);
+
+        $user = Auth::user();
+
+        $moderator = $meeting->getRoom()->getCreator()->getId() == $user->getId();
+
+        $bbb                 = new BigBlueButton();
+        $createMeetingParams = new CreateMeetingParameters($meeting->id, $meeting->name);
+        $createMeetingParams->setModeratorPassword('moderator_password');
+        $createMeetingParams->setAttendeePassword('attendee_password');
+        $response = $bbb->createMeeting($createMeetingParams);
+
+        $joinMeetingParams = new JoinMeetingParameters($meetingId, Auth::user()->getName(),
+            $moderator ? $response->getModeratorPassword() : $response->getAttendeePassword());
+        $joinMeetingParams->setRedirect(true);
+        $url = $bbb->getJoinMeetingURL($joinMeetingParams);
+
+        return redirect($url);
     }
 
 }

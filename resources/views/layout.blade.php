@@ -11,7 +11,10 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="pt-3 pt-md-0 collapse navbar-collapse" id="navbarToggler">
-                <div class="d-flex ms-auto">
+                <div class="d-flex align-items-center ms-auto">
+                    <span class="text-gray-600 fw-bolder me-3">
+                        {{ \Illuminate\Support\Facades\Auth::user()->getName() }}
+                    </span>
                     <a href="{{ route('logout') }}" class="btn text-gray-50 bg-blue-500 bg-blue-600-hover ms-auto">
                         {{ __('auth.logout') }}
                     </a>

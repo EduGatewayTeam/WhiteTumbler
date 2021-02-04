@@ -30,13 +30,20 @@ class User implements Authenticatable
     protected $rememberToken;
 
     /**
+     * @var string
+     * @ORM\Column
+     */
+    protected $name;
+
+    /**
      * @ORM\OneToMany(targetEntity="Room", mappedBy="creator")
      */
     protected $rooms;
 
-    public function __construct($id)
+    public function __construct($id, $name)
     {
         $this->id = $id;
+        $this->name = $name;
         $this->rooms = new ArrayCollection();
     }
 
@@ -94,4 +101,29 @@ class User implements Authenticatable
     {
         return $this->rooms;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
 }

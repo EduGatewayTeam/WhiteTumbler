@@ -70,6 +70,14 @@ class Room implements \JsonSerializable
     }
 
     /**
+     * @return User
+     */
+    public function getCreator(): User
+    {
+        return $this->creator;
+    }
+
+    /**
      * @return mixed
      */
     public function getMeetings()

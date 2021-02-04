@@ -50,7 +50,21 @@
                     <div class="modal-body">
 
                         <div v-for="(meeting, index) in activeRoom.meetings">
-                            <span>@{{ meeting.name }}</span>
+                            <div class="p-2 d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <div class="spinner-grow spinner-grow-sm" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <span class="ms-3">@{{ meeting.name }}</span>
+                                </div>
+                                <div>
+                                    <a :href="`/meetings/${meeting.id}/join`" class="btn p-2 lh-1 rounded-circle bg-blue-50 bg-blue-400-hover">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div v-if="activeRoom.meetings.length === 0">
                             <span class="fs-4 text-gray-400">
@@ -70,7 +84,7 @@
                                         type="button"
                                         class="btn p-2 ms-2 border-0 bg-blue-500 bg-blue-600-hover text-white rounded-circle lh-1">
                                     <span v-if="newMeetingProcessing"
-                                          class="spinner-border spinner-border-24" role="status">
+                                          class="spinner-border spinner-size-24" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </span>
                                     <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24"
