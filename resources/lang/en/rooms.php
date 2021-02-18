@@ -8,6 +8,7 @@ return [
     'cancel' => "Cancel",
     'empty' => "You haven't rooms yet :(",
     'meeting-name' => "Meeting name",
-    'no-meetings' => "No meetings planned yet."
-
+    'no-meetings' => "No meetings planned yet.",
+    'dont-start-meeting' => "The meeting hasn't started yet. Wait ...",
+    'expired-meeting' => "The meeting is over."
 ];

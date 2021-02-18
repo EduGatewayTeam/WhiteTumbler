@@ -3,6 +3,9 @@ import 'bootstrap'
 import Vue from 'vue'
 import Toast from "vue-toastification";
 import axios from 'axios'
+import jstz from 'jstz'
+import moment from 'moment'
+import moment_ from 'moment-timezone'
 
 import "vue-toastification/dist/index.css";
 
@@ -32,6 +35,12 @@ Vue.component('w-rooms', {
         roomsInit: Array
     },
     data() {
+        if (!sessionStorage.getItem('timezone')) {
+            var tz = jstz.determine() || 'UTC';
+            sessionStorage.setItem('timezone', tz.name());
+        }
+        var currTz = sessionStorage.getItem('timezone');
+
         return {
             rooms: this.roomsInit,
             roomCreateProcessing: false,
@@ -44,6 +53,7 @@ Vue.component('w-rooms', {
             activeRoomIndex: null,
             newMeetingProcessing: false,
             meetingName: '',
+            currTz: currTz
         }
     },
     mounted() {
@@ -76,7 +86,8 @@ Vue.component('w-rooms', {
             this.activeRoom = this.rooms[roomIndex]
             this.activeRoomIndex = roomIndex
             $('#roomPage').modal('show')
-            console.log(this.activeRoom.name)
+            console.log('Room name: ' + this.activeRoom.name)
+            this.meetings = this.checkMeetingActivation (this.rooms[roomIndex].meetings)
         },
         deleteRoom(roomIndex) {
             api.delete(`/rooms/${this.rooms[roomIndex].id}`)
@@ -106,6 +117,7 @@ Vue.component('w-rooms', {
                     // this.errors = response.data.errors
                 } else {
                     this.activeRoom.meetings.push(response.data)
+                    this.meetings = this.checkMeetingActivation (this.activeRoom.meetings)
                     Vue.set(this.rooms, this.activeRoomIndex, this.activeRoom)
                     // this.errors = {}
                     this.meetingName = ''
@@ -118,6 +130,40 @@ Vue.component('w-rooms', {
             }).then(() => {
                 this.newMeetingProcessing = false
             })
+        },
+        checkMeetingActivation(meetings){
+            meetings.forEach(function(meeting, index){
+                let now = new Date(),
+                meetingActivateDate = new Date(meeting.activateAt.date)
+                if (meeting.deactivateAt !== null) {
+                    var meetingDeactivateDate = new Date(meeting.deactivateAt.date)
+                    if (now.getTime() >= meetingActivateDate.getTime()){
+                        if (now.getTime() < meetingDeactivateDate.getTime()){
+                            meeting.isActive = true
+                        }
+                        else {
+                            meeting.isActive = -1
+                        }
+                    }
+                    else {meeting.isActive = false}
+                }
+                else {
+                    meeting.isActive = (now.getTime() >= meetingActivateDate.getTime())
+                }
+            });
+            
+            meetings.sort(function(a, b){
+                return new Date(a.activateAt.date) - new Date(b.activateAt.date)
+            })
+            
+            return meetings
+        },
+        dateLocalization(meeting_date, output_format='DD.MM.YY HH:mm') {
+            var date = moment(meeting_date).format("YYYY-MM-DDTH:mm");
+            var momentTime = moment(date + "Z");
+            var tzTime = momentTime.tz(this.currTz);
+            var format_date = tzTime.format(output_format);
+            return format_date
         }
     }
 })
