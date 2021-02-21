@@ -25,7 +25,7 @@ RUN apt-get -qq update > /dev/null && DEBIAN_FRONTEND=noninteractive apt-get -qq
     php7.4-xml \
     php7.4-mbstring \
     php7.4-curl \
-    php-pgsql \
+    php7.4-pgsql \
     php-pear > /dev/null &&\
     echo $(pecl install xdebug | sed '$!d' | grep -o '".*"' | sed 's/"//g') >> /etc/php/7.4/fpm/php.ini &&\
     apt-get clean && \
