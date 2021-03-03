@@ -42,4 +42,16 @@ class RoomsController extends Controller
         return new JsonResponse($room);
     }
 
+
+    /**
+     * @param $roomId
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     * @DELETE("/rooms/{roomId}")
+     */
+    public function deleteRoom($roomId, EntityManagerInterface $em) {
+        $room = new Room();
+        return new JsonResponse($room);
+    }
+
 }
