@@ -84,7 +84,7 @@ class MeetingsController extends Controller
     /**
      * @param $meetingId
      * @param EntityManagerInterface $em
-     * @return mixed
+     * @return JsonResponse
      * @DELETE("/meetings/{meetingId}", middleware="web")
      * @Middleware("auth")
      */
