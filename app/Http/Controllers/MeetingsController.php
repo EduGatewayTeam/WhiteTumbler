@@ -81,4 +81,23 @@ class MeetingsController extends Controller
         return redirect($url);
     }
 
+    /**
+     * @param $meetingId
+     * @param EntityManagerInterface $em
+     * @return mixed
+     * @DELETE("/meetings/{meetingId}", middleware="web")
+     * @Middleware("auth")
+     */
+    public function delete($meetingId, EntityManagerInterface $em) {
+        $user = Auth::user();
+        
+        $repository = $em->getRepository(Meeting::class);
+        $meeting = $repository->find($meetingId);
+
+        $em->remove($meeting);
+        $em->flush();
+
+        return new JsonResponse($meeting);
+    }
+
 }
