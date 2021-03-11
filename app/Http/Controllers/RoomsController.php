@@ -42,4 +42,24 @@ class RoomsController extends Controller
         return new JsonResponse($room);
     }
 
+
+    /**
+     * @param $roomId
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     * @DELETE("/rooms/{roomId}", middleware="web")
+     * @Middleware("auth")
+     */
+    public function deleteRoom($roomId, EntityManagerInterface $em) {
+        $user = Auth::user();
+
+        $repository = $em->getRepository(Room::class);
+        $room = $repository->find($roomId);
+
+        $em->remove($room);
+        $em->flush();
+
+        return new JsonResponse($room);
+    }
+
 }
