@@ -1,11 +1,30 @@
 import '../scss/app.scss'
 import 'bootstrap'
 import Vue from 'vue'
+import Toast from "vue-toastification";
 import axios from 'axios'
+
+import "vue-toastification/dist/index.css";
 
 const api = axios.create()
 api.defaults.withCredentials = true
 api.defaults.headers.common['Content-Type'] = 'application/json'
+
+//toast settings
+const options = {
+    position: "top-right",
+    timeout: 2500,
+    closeOnClick: true,
+    pauseOnFocusLoss: true,
+    pauseOnHover: true,
+    draggable: true,
+    draggablePercent: 0.6,
+    showCloseButtonOnHover: false,
+    hideProgressBar: true,
+    closeButton: "button",
+    icon: true,
+    rtl: false
+};
 
 Vue.component('w-rooms', {
     template: '#rooms-template',
@@ -59,6 +78,24 @@ Vue.component('w-rooms', {
             $('#roomPage').modal('show')
             console.log(this.activeRoom.name)
         },
+        deleteRoom(roomIndex) {
+            api.delete(`/rooms/${this.rooms[roomIndex].id}`)
+                .then((response) => {
+                    if (response.data.errors) {
+                        this.errors = response.data.errors
+                    } else {
+                        this.errors = {}
+                        this.rooms.splice(roomIndex, 1);
+                        this.$toast.success(`The room was deleted!`, options);
+                    }
+                    console.log(response)
+                })
+                .catch((error) => {
+                    this.errors = {
+                        request: error
+                    }
+                })
+        },
         addMeeting() {
             this.newMeetingProcessing = true
             api.post('/meetings', {
@@ -88,4 +125,6 @@ Vue.component('w-rooms', {
 const app = new Vue({
     el: '#app'
 })
+
+Vue.use(Toast, options);
 

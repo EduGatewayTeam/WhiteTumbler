@@ -18,8 +18,8 @@ class Room implements \JsonSerializable
     /**
      * @var integer id
      * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\Column(type="guid")
+     * @ORM\GeneratedValue(strategy="UUID")
      */
     public $id;
 
