@@ -15,7 +15,7 @@
             </span>
         </div>
     </div>
-    </div>
+</div>
 
 @endpush
 

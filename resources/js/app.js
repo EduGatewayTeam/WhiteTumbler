@@ -44,7 +44,9 @@ Vue.component('w-rooms', {
         return {
             rooms: this.roomsInit,
             roomCreateProcessing: false,
+            roomDeleteProcessing: false,
             roomName: '',
+            delitingRoomIndex: null,
             errors: {
                 request: '',
                 roomName: ''
@@ -79,7 +81,7 @@ Vue.component('w-rooms', {
                     request: error
                 }
             }).then(() => {
-                this.roomCreateProcessing = false
+                this.roomCreateProcessing = false;
             })
         },
         openRoom(roomIndex) {
@@ -89,24 +91,41 @@ Vue.component('w-rooms', {
             console.log('Room name: ' + this.activeRoom.name)
             this.meetings = this.checkMeetingActivation (this.rooms[roomIndex].meetings)
         },
+        
+        // refactor two functions in one
         deleteRoom(roomIndex) {
-            api.delete(`/rooms/${this.rooms[roomIndex].id}`)
+            $('#confirmDeleteModal').modal('show')
+            this.delitingRoomIndex = roomIndex
+        },
+        deleteRoomConfirm(){
+            this.roomDeleteProcessing = true
+            console.log(this.delitingRoomIndex)
+
+            api.delete(`/rooms/${this.rooms[this.delitingRoomIndex].id}`)
                 .then((response) => {
                     if (response.data.errors) {
                         this.errors = response.data.errors
                     } else {
                         this.errors = {}
-                        this.rooms.splice(roomIndex, 1);
-                        this.$toast.success(`The room was deleted!`, options);
+                        this.rooms.splice(this.delitingRoomIndex, 1)
+                        $('#confirmDeleteModal').modal('hide')
+                        this.$toast.success(`The room was deleted!`, options)
                     }
-                    console.log(response)
+                    console.log("response: ", response)
                 })
                 .catch((error) => {
                     this.errors = {
                         request: error
                     }
                 })
+                .finally( () => {
+                    $('#confirmDeleteModal').modal('hide')
+                    this.delitingRoomIndex = null
+                    this.roomDeleteProcessing = false
+                }
+            )
         },
+
         addMeeting() {
             this.newMeetingProcessing = true
             api.post('/meetings', {

@@ -2,49 +2,80 @@
 
 @push('components')
     <script type="text/x-template" id="rooms-template">
-        <div>
-            <div class="modal fade" id="addRoomModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="addRoomModalLabel">{{ __('rooms.create-room-title') }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ __('rooms.delete-room') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            <form v-on:submit.prevent="createRoom" class="p-4">
-                                <div class="row alert alert-danger" role="alert" v-show="errors.request">
-                                    Request error!
+                    <div class="modal-body">
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">
+                                {{ __('rooms.confirm-deleting') }}
+                            </h3>
+                        </div>
+                    </div>
+                        
+                    <div class="modal-footer">   
+                        <button type="button" class="btn btn-secondary">{{ __('rooms.cancel') }}</button>
+                        <button :disabled="roomDeleteProcessing" @click="deleteRoomConfirm" type="button" class="d-flex align-items-center btn text-white bg-blue-500 bg-blue-600-hover">
+                            <span v-show="roomDeleteProcessing"
+                                class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                            <span class="ms-2">{{ __('rooms.delete-room') }}</span>
+                        </button>
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="addRoomModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRoomModalLabel">{{ __('rooms.create-room-title') }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form v-on:submit.prevent="createRoom" class="p-4">
+                            <div class="row alert alert-danger" role="alert" v-show="errors.request">
+                                Request error!
+                            </div>
+                            <div class="row">
+                                <label for="inputRoomCreateName" class="form-label">{{ __('rooms.room-title-label') }}</label>
+                                <input :disabled="roomCreateProcessing" v-model="roomName" :class="{ 'is-invalid': errors.name }"
+                                    type="text" class="form-control" id="inputRoomCreateName">
+                                <div class="invalid-feedback">
+                                    <span v-for="error in errors.name">@{{ error }}</span>
                                 </div>
-                                <div class="row">
-                                    <label for="inputRoomCreateName" class="form-label">{{ __('rooms.room-title-label') }}</label>
-                                    <input :disabled="roomCreateProcessing" v-model="roomName" :class="{ 'is-invalid': errors.name }"
-                                        type="text" class="form-control" id="inputRoomCreateName">
-                                    <div class="invalid-feedback">
-                                        <span v-for="error in errors.name">@{{ error }}</span>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('rooms.cancel') }}</button>
-                            <button :disabled="roomCreateProcessing" @click="createRoom"
-                                type="button" class="d-flex align-items-center btn text-white bg-blue-500 bg-blue-600-hover">
-                                <span v-show="roomCreateProcessing"
-                                    class="spinner-border spinner-border-sm" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </span>
-                                <span class="ms-2">{{ __('rooms.room-create') }}</span>
-                            </button>
-                        </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('rooms.cancel') }}</button>
+                        <button :disabled="roomCreateProcessing" @click="createRoom"
+                            type="button" class="d-flex align-items-center btn text-white bg-blue-500 bg-blue-600-hover">
+                            <span v-show="roomCreateProcessing"
+                                class="spinner-border spinner-border-sm" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                            <span class="ms-2">{{ __('rooms.room-create') }}</span>
+                        </button>
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="modal fade" id="roomPage" tabindex="-1" aria-labelledby="roomPageLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div v-if="activeRoom !== null" class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="roomPageLabel">@{{ activeRoom.name }}</h5>
+                        <h5 class="modal-title" id="roomPageLabel">@{{ activeRoom . name }}</h5>
                         <button type="button" class="btn-close text-gray-50" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -57,8 +88,8 @@
                                         class="spinner-grow spinner-grow-sm text-danger" role="status">
                                         <span class="visually-hidden">Loading...</span>
                                     </div>
-                                    <span class="ms-3">@{{ meeting.name }}</span>
-                                    <span class="ms-3">@{{ dateLocalization(meeting.activateAt['date']) }}</span>
+                                    <span class="ms-3">@{{ meeting . name }}</span>
+                                    <span class="ms-3">@{{ dateLocalization(meeting . activateAt['date']) }}</span>
                                 </div>
 
                                 <div >
@@ -87,20 +118,20 @@
                             <div class="mt-2 d-flex align-items-center">
                                 <div>
                                     <input :disabled="newMeetingProcessing" v-model="meetingName"
-                                           :class="{ 'is-invalid': errors.name }"
-                                           type="text" class="form-control" id="inputRoomCreateName"
-                                           placeholder="{{ __('rooms.meeting-name') }}">
+                                            :class="{ 'is-invalid': errors.name }"
+                                            type="text" class="form-control" id="inputRoomCreateName"
+                                            placeholder="{{ __('rooms.meeting-name') }}">
                                 </div>
                                 <div>
                                     <button @click="addMeeting"
                                             type="button"
                                             class="btn p-2 ms-2 border-0 bg-blue-500 bg-blue-600-hover text-white rounded-circle lh-1">
                                         <span v-if="newMeetingProcessing"
-                                              class="spinner-border spinner-size-24" role="status">
+                                                class="spinner-border spinner-size-24" role="status">
                                             <span class="visually-hidden">Loading...</span>
                                         </span>
                                         <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                             fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                                                fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
                                             <path
                                                 d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                                         </svg>
@@ -130,7 +161,7 @@
                             <div class="d-flex align-items-center bg-blue-900 p-2 rounded-top-3">
                                 <a @click="openRoom(index)"
                                     href="#" class="no-underline p-0 fs-5 mb-0 ms-2 text-white text-wrap text-break text-start">
-                                    @{{ room.name }}
+                                    @{{ room . name }}
                                 </a>
                             </div>
                             <div class="px-3 py-4 flex">
@@ -147,10 +178,6 @@
 
                                     <button class="btn ml-3 p-1 rounded-circle lh-1">
                                         <i class="fa fa-cog"></i>
-                                        {{-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-                                        </svg> --}}
                                     </button>
                                     <button @click="deleteRoom(index)" class="btn p-1 rounded-circle lh-1">
                                         <i class="fa fa-trash"></i>
@@ -166,7 +193,7 @@
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
         </script>
 @endpush
 
