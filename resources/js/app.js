@@ -81,7 +81,7 @@ Vue.component('w-rooms', {
                     request: error
                 }
             }).then(() => {
-                this.roomCreateProcessing = false;
+                this.roomCreateProcessing = false
             })
         },
         openRoom(roomIndex) {
@@ -147,7 +147,7 @@ Vue.component('w-rooms', {
                     request: error
                 }
             }).then(() => {
-                this.newMeetingProcessing = false
+                this.newMeetingProcessing = false;
             })
         },
         checkMeetingActivation(meetings){
