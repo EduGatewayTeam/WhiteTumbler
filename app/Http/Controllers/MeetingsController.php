@@ -16,6 +16,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use DateTime;
 
 class MeetingsController extends Controller
 {
@@ -24,7 +25,7 @@ class MeetingsController extends Controller
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return JsonResponse
-     * @Post("/meetings", middleware="web")
+     * @Post("/meetings", middleware="web")	
      * @Middleware("auth")
      */
     public function newMeeting(Request $request, EntityManagerInterface $em) {
@@ -45,6 +46,8 @@ class MeetingsController extends Controller
         $meeting = new Meeting();
         $meeting->setRoom($room);
         $meeting->setName($request->name);
+        $meeting->setActivateAt(isset($request->activationDate) ? new DateTime($request->activationDate) : new DateTime());
+        $meeting->setDeactivateAt(isset($request->deactivationDate) ? new DateTime($request->deactivationDate) : null);
         $em->persist($meeting);
         $em->flush();
 
@@ -62,8 +65,15 @@ class MeetingsController extends Controller
     public function join($meetingId, EntityManagerInterface $em) {
         $repository = $em->getRepository(Meeting::class);
         $meeting = $repository->find($meetingId);
-
         $user = Auth::user();
+
+        if ($meeting->activateAt > new DateTime()){
+            return view('waitMeeting');
+        }
+        
+        if ($meeting->deactivateAt < new DateTime()){
+            return view('expiredMeeting');
+        }        
 
         $moderator = $meeting->getRoom()->getCreator()->getId() == $user->getId();
 

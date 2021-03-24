@@ -13,3 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/wait_meeting', 'MeetingsController@waitMeeting')->name('wait_meeting');
