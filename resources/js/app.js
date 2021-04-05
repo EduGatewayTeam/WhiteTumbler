@@ -65,7 +65,11 @@ Vue.component('w-rooms', {
         createRoom() {
             this.roomCreateProcessing = true
             api.post('/rooms', {
-                name: this.roomName
+                name: this.roomName,
+                default_meeting_settings: {
+                    mute_on_startup: true,
+                    expect_moderator: true
+                }
             }).then((response) => {
                 if (response.data.errors) {
                     this.errors = response.data.errors

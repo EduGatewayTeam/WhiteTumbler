@@ -19,11 +19,7 @@ class MainController extends Controller
     public function redirectToProvider()
     {
         $rooms = array_map(function ($room) {
-            return [
-                'id' => $room->id,
-                'name' => $room->name,
-                'meetings' => $room->getMeetings()->toArray()
-            ];
+            return $room->jsonSerialize();
         }, Auth::user()->getRooms()->toArray());
         return view('index', ['rooms' => $rooms]);
     }
