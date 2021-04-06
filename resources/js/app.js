@@ -109,7 +109,7 @@ Vue.component('w-rooms', {
                         this.errors = {}
                         this.rooms.splice(this.delitingRoomIndex, 1)
                         $('#confirmDeleteModal').modal('hide')
-                        this.$toast.success(`The room was deleted!`, options)
+                        this.$toast.success(`The room was deleted.`, options)
                     }
                     console.log("response: ", response)
                 })
@@ -117,6 +117,8 @@ Vue.component('w-rooms', {
                     this.errors = {
                         request: error
                     }
+                    this.$toast.error(`The room was not deleted.`)
+                    console.log(error)
                 })
                 .finally( () => {
                     $('#confirmDeleteModal').modal('hide')
