@@ -133,4 +133,15 @@ class Meeting
     {
         $this->settings = $settings;
     }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'settings' => $this->getSettings(),
+            'activateAt' => $this->getActivateAt(),
+            'deactivateAt' => $this->getDeactivateAt()
+        ];
+    }
 }
