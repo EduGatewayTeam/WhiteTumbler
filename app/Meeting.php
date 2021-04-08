@@ -5,6 +5,7 @@ namespace App;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Settings;
 
 /**
  * Class Meeting
@@ -46,6 +47,12 @@ class Meeting
      * @ORM\Column(type="datetime", nullable=true)
      */
     public $deactivateAt;
+
+    /**
+     * @var Settings
+     * @ORM\ManyToOne(targetEntity="Settings", inversedBy="meeting")
+     */
+    protected $settings;
 
     /**
      * @return Room
@@ -111,4 +118,30 @@ class Meeting
         $this->deactivateAt = $deactivateAt;
     }
 
+    /**
+     * @return Settings
+     */
+    public function getSettings(): Settings
+    {
+        return $this->settings;
+    }
+
+    /**
+     * @param Settings $settings
+     */
+    public function setSettings(Settings $settings): void
+    {
+        $this->settings = $settings;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'settings' => $this->getSettings(),
+            'activateAt' => $this->getActivateAt(),
+            'deactivateAt' => $this->getDeactivateAt()
+        ];
+    }
 }

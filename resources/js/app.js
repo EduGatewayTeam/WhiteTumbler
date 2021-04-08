@@ -65,7 +65,11 @@ Vue.component('w-rooms', {
         createRoom() {
             this.roomCreateProcessing = true
             api.post('/rooms', {
-                name: this.roomName
+                name: this.roomName,
+                default_meeting_settings: {
+                    mute_on_startup: true,
+                    expect_moderator: true
+                }
             }).then((response) => {
                 if (response.data.errors) {
                     this.errors = response.data.errors
@@ -130,7 +134,11 @@ Vue.component('w-rooms', {
             this.newMeetingProcessing = true
             api.post('/meetings', {
                 roomId: this.activeRoom.id,
-                name: this.meetingName
+                name: this.meetingName,
+                settings: {
+                    mute_on_startup: this.activeRoom.default_meeting_settings.mute_on_startup,
+                    expect_moderator: this.activeRoom.default_meeting_settings.expect_moderator,
+                }
             }).then((response) => {
                 if (response.data.errors) {
                     // this.errors = response.data.errors

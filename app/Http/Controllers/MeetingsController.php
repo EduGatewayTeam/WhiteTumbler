@@ -40,14 +40,15 @@ class MeetingsController extends Controller
             ]);
         }
 
-        $repository = $em->getRepository(Room::class);
-        $room = $repository->find($request->roomId);
+        $repository_rooms = $em->getRepository(Room::class);
+        $room = $repository_rooms->find($request->roomId);
 
         $meeting = new Meeting();
         $meeting->setRoom($room);
         $meeting->setName($request->name);
         $meeting->setActivateAt(isset($request->activationDate) ? new DateTime($request->activationDate) : new DateTime());
         $meeting->setDeactivateAt(isset($request->deactivationDate) ? new DateTime($request->deactivationDate) : null);
+        $meeting->setSettings(SettingsController::addSettings($request->settings, $em));
         $em->persist($meeting);
         $em->flush();
 
