@@ -7,6 +7,8 @@ import jstz from 'jstz'
 import moment from 'moment'
 import moment_ from 'moment-timezone'
 
+import DateTimePicker from './components/DateTimePicker.vue';
+
 import "vue-toastification/dist/index.css";
 
 const api = axios.create()
@@ -28,6 +30,8 @@ const options = {
     icon: true,
     rtl: false
 };
+
+Vue.component('date-time-picker', DateTimePicker)
 
 Vue.component('w-rooms', {
     template: '#rooms-template',
@@ -194,4 +198,3 @@ const app = new Vue({
 })
 
 Vue.use(Toast, options);
-
