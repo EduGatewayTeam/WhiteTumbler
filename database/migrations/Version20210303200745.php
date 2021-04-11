@@ -22,7 +22,7 @@ class Version20210303200745 extends AbstractMigration
         $this->addSql('ALTER TABLE public.meetings 
                     ALTER COLUMN room_id DROP DEFAULT, 
                     ALTER COLUMN room_id TYPE uuid USING (uuid_generate_v4())');
-        $this->addSql('ALTER TABLE meetings ADD CONSTRAINT FK_44FE52E254177093 FOREIGN KEY (room_id) REFERENCES rooms (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE meetings ADD CONSTRAINT FK_44FE52E254177093 FOREIGN KEY (room_id) REFERENCES rooms (id) ON DELETE CASCADE ON UPDATE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE ');
     }
 
     /**

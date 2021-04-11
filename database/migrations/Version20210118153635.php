@@ -16,7 +16,7 @@ class Version20210118153635 extends AbstractMigration
 
         $this->addSql('CREATE TABLE meetings (id UUID NOT NULL, room_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_44FE52E254177093 ON meetings (room_id)');
-        $this->addSql('ALTER TABLE meetings ADD CONSTRAINT FK_44FE52E254177093 FOREIGN KEY (room_id) REFERENCES rooms (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE meetings ADD CONSTRAINT FK_44FE52E254177093 FOREIGN KEY (room_id) REFERENCES rooms (id) ON DELETE CASCADE ON UPDATE CASCADE NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
     /**
