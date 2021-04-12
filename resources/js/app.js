@@ -59,6 +59,7 @@ Vue.component('w-rooms', {
             activeRoomIndex: null,
             newMeetingProcessing: false,
             meetingName: '',
+            dateTimeRange: null,
             currTz: currTz
         }
     },
@@ -131,12 +132,20 @@ Vue.component('w-rooms', {
                 }
             )
         },
-
+        getDataTimeRange(dateTimeRange){
+            console.log("getDataTimeRange: ", dateTimeRange)
+            this.dateTimeRange = dateTimeRange
+        },
         addMeeting() {
             this.newMeetingProcessing = true
+            console.log("addMeeting(this): ", this)
+            let activationDate = this.dateTimeRange[0] ?? null
+            let deactivationDate = this.dateTimeRange[1] ?? null
             api.post('/meetings', {
                 roomId: this.activeRoom.id,
-                name: this.meetingName
+                name: this.meetingName,
+                activationDate,
+                deactivationDate
             }).then((response) => {
                 if (response.data.errors) {
                     // this.errors = response.data.errors
@@ -155,6 +164,7 @@ Vue.component('w-rooms', {
             }).then(() => {
                 this.newMeetingProcessing = false;
             })
+
         },
         checkMeetingActivation(meetings){
             meetings.forEach(function(meeting, index){

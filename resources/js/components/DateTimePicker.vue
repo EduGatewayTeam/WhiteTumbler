@@ -9,11 +9,17 @@ export default {
       dataTimeRange: null,
     };
   },
+  methods:{
+  sendData: function(){
+    this.$emit('sendDataTimeRange', this.dataTimeRange);
+  }
+}
 };
 </script>
 
 <template>
   <date-picker
+    @input="sendData"
     v-model="dataTimeRange"
     type="datetime"
     range

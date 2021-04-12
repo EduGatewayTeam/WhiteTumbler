@@ -24,7 +24,7 @@
                         <div class="d-flex justify-content-end">
 
                             {{-- delete room action --}}
-                            <a href="/meetings/delete" class="btn p-2 lh-1 rounded-circle bg-blue-50 bg-blue-400-hover me-1">
+                            <a href="" class="btn p-2 lh-1 rounded-circle bg-blue-50 bg-blue-400-hover me-1">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -68,7 +68,7 @@
                             id="inputRoomCreateName" placeholder="{{ __('rooms.meeting-name') }}" required>
                     </div>
 
-                    <date-time-picker></date-time-picker>
+                    <date-time-picker v-on:sendDataTimeRange="getDataTimeRange"></date-time-picker>
 
                     <div>
                         <button @click="addMeeting" type="button"
