@@ -36,6 +36,18 @@ class Meeting
     public $name;
 
     /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=false)
+     */
+    public $activateAt;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    public $deactivateAt;
+
+    /**
      * @return Room
      */
     public function getRoom(): Room
@@ -65,6 +77,38 @@ class Meeting
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getActivateAt(): \DateTime
+    {
+        return $this->getActivateAt;
+    }
+
+    /**
+     * @param \DateTime $activateAt
+     */
+    public function setActivateAt(\DateTime $activateAt): void
+    {
+        $this->activateAt = $activateAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeactivateAt(): \DateTime
+    {
+        return $this->getDeactivateAt;
+    }
+
+    /**
+     * @param \DateTime $deactivateAt
+     */
+    public function setDeactivateAt(\DateTime $deactivateAt = null): void
+    {
+        $this->deactivateAt = $deactivateAt;
     }
 
 }

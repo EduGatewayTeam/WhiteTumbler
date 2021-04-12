@@ -36,14 +36,21 @@ class User implements Authenticatable
     protected $name;
 
     /**
+     * @var string
+     * @ORM\Column
+     */
+    protected $family_name;
+
+    /**
      * @ORM\OneToMany(targetEntity="Room", mappedBy="creator")
      */
     protected $rooms;
 
-    public function __construct($id, $name)
+    public function __construct($id, $name, $family_name)
     {
         $this->id = $id;
-        $this->name = $name;
+        $this->name = ucfirst($name);
+        $this->family_name = ucfirst($family_name);
         $this->rooms = new ArrayCollection();
     }
 
@@ -124,6 +131,38 @@ class User implements Authenticatable
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFamilyName(): string
+    {
+        return $this->family_name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setFamilyName(string $family_name): void
+    {
+        $this->family_name = $family_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->family_name.' '.$this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbbreviatedFullName(): string
+    {
+        return $this->family_name.' '.$this->name[0].'.';
     }
 
 }
