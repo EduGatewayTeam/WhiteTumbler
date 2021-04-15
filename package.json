@@ -33,6 +33,7 @@
         "moment": "^2.29.1",
         "moment-timezone": "^0.5.33",
         "vue": "^2.6.12",
+        "vue-clipboard2": "^0.3.1",
         "vue-toastification": "^1.7.11",
         "vue2-datepicker": "^3.9.0"
     }

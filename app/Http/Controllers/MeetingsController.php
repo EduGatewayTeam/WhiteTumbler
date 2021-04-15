@@ -71,7 +71,7 @@ class MeetingsController extends Controller
             return view('waitMeeting');
         }
         
-        if ($meeting->deactivateAt < new DateTime()){
+        if ($meeting->deactivateAt != null && $meeting->deactivateAt < new DateTime()){
             return view('expiredMeeting');
         }        
 
