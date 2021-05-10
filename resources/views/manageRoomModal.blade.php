@@ -75,6 +75,7 @@
                 </div>
 
                 <div class="mt-2 d-flex align-items-center">
+                    
                     <div class="me-2">
                         <input :disabled="newMeetingProcessing" v-model="meetingName"
                             :class="{ 'is-invalid': errors.name }" type="text" class="form-control"
