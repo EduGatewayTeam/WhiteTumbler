@@ -1,6 +1,6 @@
 <template>
     <span
-        v-clipboard:copy="meetingLink"
+        v-clipboard:copy="getFullLink()"
         v-clipboard:success="onCopy"
         v-clipboard:error="onError"
         class="btn p-2 lh-1 rounded-circle bg-blue-50 bg-blue-400-hover me-1"
@@ -40,17 +40,17 @@ export default {
         meetingLink: String
     },
     methods: {
+        getFullLink() {
+            return window.location.host + this.meetingLink;
+        },
         onCopy: function(e) {
-            console.log(this)
+            this.$el.childNodes[0].style.display = "none";
+            this.$el.childNodes[2].style.display = "block";
 
-            this.$el.childNodes[0].style.display = "none"
-            this.$el.childNodes[2].style.display = "block"
-            
-            setTimeout( () => {
-                this.$el.childNodes[0].style.display = "block"
-                this.$el.childNodes[2].style.display = "none"
-            }, 2000)
-
+            setTimeout(() => {
+                this.$el.childNodes[0].style.display = "block";
+                this.$el.childNodes[2].style.display = "none";
+            }, 1500);
         },
         onError: function(e) {
             alert("Failed to copy link");
