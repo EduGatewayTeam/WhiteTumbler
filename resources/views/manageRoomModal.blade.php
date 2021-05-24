@@ -74,7 +74,7 @@
 
                     <date-time-picker v-on:sendDataTimeRange="getDataTimeRange"></date-time-picker>
 
-                    <div>
+                    <div class="self-end">
                         <button @click="addMeeting" type="button"
                             class="btn p-2 ms-2 border-0 bg-blue-500 bg-blue-600-hover text-white rounded-circle lh-1">
                             <span v-if="newMeetingProcessing" class="spinner-border spinner-size-24" role="status">

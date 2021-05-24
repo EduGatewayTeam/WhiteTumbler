@@ -3,6 +3,15 @@
 @import "~bootstrap/scss/utilities";
 @import "~@fortawesome/fontawesome-free/css/all.css";
 
+/* own style*/
+
+.modal-dialog .modal-lg {
+    max-width: 90%;
+}
+
+
+/* +---------+ */
+
 $rounded-corners: (
     null: $border-radius,
     sm: $border-radius-sm,
