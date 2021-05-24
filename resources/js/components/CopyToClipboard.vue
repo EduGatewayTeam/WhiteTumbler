@@ -1,5 +1,6 @@
 <template>
     <span
+        v-b-popover.hover.top="'Copy meeting link'"
         v-clipboard:copy="getFullLink()"
         v-clipboard:success="onCopy"
         v-clipboard:error="onError"
@@ -35,9 +36,14 @@
 </template>
 
 <script>
+import { VBPopover } from "bootstrap-vue";
+
 export default {
     props: {
         meetingLink: String
+    },
+    directives: {
+        "b-popover": VBPopover
     },
     methods: {
         getFullLink() {
@@ -55,6 +61,6 @@ export default {
         onError: function(e) {
             alert("Failed to copy link");
         }
-    }
+    }   
 };
 </script>

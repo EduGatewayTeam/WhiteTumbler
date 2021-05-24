@@ -2,6 +2,7 @@
 import jstz from 'jstz'
 import moment from 'moment'
 import axios from 'axios'
+import { VBPopover } from "bootstrap-vue";
 
 const api = axios.create()
 api.defaults.withCredentials = true
@@ -11,6 +12,9 @@ export default {
     template: "#rooms-template",
     props: {
         roomsInit: Array
+    },
+    directives: {
+        "b-popover": VBPopover
     },
     data() {
         if (!sessionStorage.getItem("timezone")) {

@@ -11,16 +11,20 @@ import CopyToClipboard from './components/CopyToClipboard.vue';
 import '../scss/app.scss'
 import "vue-toastification/dist/index.css";
 
+import { VBPopover } from "bootstrap-vue";
+
 import {options} from './toast-options'
 
-Vue.component('copy-link-to-clipboard', CopyToClipboard)
+Vue.component('copy-link-to-clipboard', CopyToClipboard);
 
-Vue.component('date-time-picker', DateTimePicker)
+Vue.use(VBPopover);
 
-Vue.component('w-rooms', Rooms)
+Vue.component('date-time-picker', DateTimePicker);
 
-VueClipboard.config.autoSetContainer = true
-Vue.use(VueClipboard)
+Vue.component('w-rooms', Rooms);
+
+VueClipboard.config.autoSetContainer = true;
+Vue.use(VueClipboard);
 
 Vue.use(Toast, options);
 
