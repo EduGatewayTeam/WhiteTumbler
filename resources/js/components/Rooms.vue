@@ -116,6 +116,10 @@ export default {
             this.dateTimeRange = dateTimeRange;
         },
         addMeeting() {
+            if (!this.meetingName) {
+                return;
+            }
+
             this.newMeetingProcessing = true;
             let activationDate = this.dateTimeRange
                 ? this.dateTimeRange[0]
@@ -154,6 +158,7 @@ export default {
                 .then(() => {
                     this.newMeetingProcessing = false;
                 });
+                this.meetingName = "";
         },
         checkMeetingActivation(meetings) {
             meetings.forEach(function(meeting, index) {
