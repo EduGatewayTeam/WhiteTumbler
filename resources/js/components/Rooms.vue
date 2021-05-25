@@ -1,12 +1,9 @@
 <script>
-import jstz from 'jstz'
-import moment from 'moment'
-import axios from 'axios'
+import jstz from "jstz";
+import moment from "moment";
+import api from "../api";
 import { VBPopover } from "bootstrap-vue";
 
-const api = axios.create()
-api.defaults.withCredentials = true
-api.defaults.headers.common['Content-Type'] = 'application/json'
 
 export default {
     template: "#rooms-template",
@@ -120,7 +117,6 @@ export default {
         },
         addMeeting() {
             this.newMeetingProcessing = true;
-            console.log("addMeeting(this): ", this);
             let activationDate = this.dateTimeRange
                 ? this.dateTimeRange[0]
                 : null;
@@ -149,7 +145,6 @@ export default {
                         // this.errors = {}
                         this.meetingName = "";
                     }
-                    console.log(response);
                 })
                 .catch(error => {
                     this.errors = {
@@ -194,10 +189,6 @@ export default {
         dateLocalization(meeting_date, output_format = "DD.MM.YY HH:mm") {
             let date = moment(meeting_date).format(output_format);
             return date;
-            // var momentTime = moment(date + "Z");
-            // var tzTime = momentTime.tz(this.currTz);
-            // var format_date = tzTime.format(output_format);
-            // return format_date;
         }
     }
 };

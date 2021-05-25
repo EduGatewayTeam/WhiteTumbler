@@ -7,6 +7,7 @@ import Toast from "vue-toastification";
 import DateTimePicker from './components/DateTimePicker.vue';
 import Rooms from './components/Rooms.vue';
 import CopyToClipboard from './components/CopyToClipboard.vue';
+import DeleteMeting from './components/DeleteMeetingButton.vue';
 
 import '../scss/app.scss'
 import "vue-toastification/dist/index.css";
@@ -16,6 +17,8 @@ import { VBPopover } from "bootstrap-vue";
 import {options} from './toast-options'
 
 Vue.component('copy-link-to-clipboard', CopyToClipboard);
+
+Vue.component('delete-meeting', DeleteMeting);
 
 Vue.use(VBPopover);
 
