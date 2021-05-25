@@ -44,6 +44,10 @@ export default {
     },
     methods: {
         createRoom() {
+            if(!this.roomName){
+                return
+            }
+
             this.roomCreateProcessing = true;
             api.post("/rooms", {
                 name: this.roomName
