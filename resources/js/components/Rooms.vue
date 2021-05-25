@@ -34,6 +34,7 @@ export default {
             activeRoomIndex: null,
             newMeetingProcessing: false,
             meetingName: "",
+            updateRoomProcessing: false,
             dateTimeRange: null,
             currTz: currTz
         };
@@ -75,6 +76,9 @@ export default {
             this.meetings = this.checkMeetingActivation(
                 this.rooms[roomIndex].meetings
             );
+        },
+        openRoomSettings(roomIndex){
+            $("#roomSettingsModal").modal("show");
         },
 
         // refactor two functions in one

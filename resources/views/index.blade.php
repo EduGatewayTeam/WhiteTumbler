@@ -7,6 +7,9 @@
             {{-- Modal window for confirming deletion --}}
             @include('confirmDeleteModal')
 
+            {{-- Modal window for updating room --}}
+            @include('roomSettings')
+
             {{-- Modal window for adding a room --}}
             @include('addRoomModal')
             
@@ -49,7 +52,7 @@
                                     </svg>
                                     <h2 class="px-2 fs-6 mb-0">{{ Auth::user()->getName() }}</h2>
 
-                                    <button class="btn ml-3 p-1 rounded-circle lh-1">
+                                    <button @click="openRoomSettings(index)" class="btn ml-3 p-1 rounded-circle lh-1">
                                         <i class="fa fa-cog"></i>
                                     </button>
                                     <button @click="deleteRoom(index)" class="btn p-1 rounded-circle lh-1">

@@ -13,4 +13,6 @@ return [
     'expired-meeting' => "The meeting is over.",
     'confirm-deleting' => "Are you sure want to delete room ?",
     'delete-room' => "Delete room",
+    'update-room' => "Update room",
+    'room-settings' => "Room settings",
 ];
