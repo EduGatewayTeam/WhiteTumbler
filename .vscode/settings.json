@@ -1,0 +1,6 @@
+{
+    "files.watcherExclude": {
+        "**/vendor/**": true
+    },
+    "trailing-spaces.trimOnSave": true
+}
