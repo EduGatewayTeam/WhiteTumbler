@@ -10,7 +10,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Class User
- * @package App\Models
+ * @package App
  *
  * @ORM\Entity
  * @ORM\Table(name="users")
@@ -46,12 +46,25 @@ class User implements Authenticatable
      */
     protected $rooms;
 
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Room", mappedBy="moderators")
+     */
+    protected $moderatingRooms;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="Meeting", mappedBy="moderators")
+     */
+    protected $moderatingMeetings;
+
     public function __construct($id, $name, $family_name)
     {
         $this->id = $id;
         $this->name = ucfirst($name);
         $this->family_name = ucfirst($family_name);
         $this->rooms = new ArrayCollection();
+        $this->moderatingRooms = new ArrayCollection();
     }
 
     public function getAuthIdentifierName()
@@ -163,6 +176,38 @@ class User implements Authenticatable
     public function getAbbreviatedFullName(): string
     {
         return $this->family_name.' '.$this->name[0].'.';
+    }
+
+    /**
+     * @param Room $room
+     */
+    public function addModeratingRoom(Room $room)
+    {
+        $this->moderatingRooms[] = $room;
+    }
+
+    /**
+     * @param Room $room
+     */
+    public function removeModeratingRoom(Room $room)
+    {
+        $this->moderatingRooms->removeElement($room);
+    }
+
+    /**
+     * @param Meeting $meeting
+     */
+    public function addModeratingMeeting(Meeting $meeting)
+    {
+        $this->moderatingMeetings[] = $meeting;
+    }
+
+    /**
+     * @param Meeting $meeting
+     */
+    public function removeModeratingMeeting(Meeting $meeting)
+    {
+        $this->moderatingMeetings->removeElement($meeting);
     }
 
 }
