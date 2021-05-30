@@ -1,5 +1,5 @@
-import 'bootstrap'
-import Vue from 'vue'
+import Vue from 'vue';
+import VueRouter from 'vue-router';
 import VueClipboard from 'vue-clipboard2'
 import Toast from "vue-toastification";
 
@@ -9,7 +9,8 @@ import Rooms from './components/Rooms.vue';
 import CopyToClipboard from './components/CopyToClipboard.vue';
 import DeleteMeting from './components/DeleteMeetingButton.vue';
 
-import '../scss/app.scss'
+import '../scss/app.scss';
+import 'bootstrap';
 import "vue-toastification/dist/index.css";
 
 import { VBPopover } from "bootstrap-vue";

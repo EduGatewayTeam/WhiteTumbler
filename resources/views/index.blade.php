@@ -52,10 +52,10 @@
                                     </svg>
                                     <h2 class="px-2 fs-6 mb-0">{{ Auth::user()->getName() }}</h2>
 
-                                    <button @click="openRoomSettings(index)" class="btn ml-3 p-1 rounded-circle lh-1">
+                                    <button @click="openRoomSettings(index)" class="congig-btn btn ml-3 p-1 rounded-circle lh-1">
                                         <i class="fa fa-cog"></i>
                                     </button>
-                                    <button @click="deleteRoom(index)" class="btn p-1 rounded-circle lh-1">
+                                    <button @click="deleteRoom(index)" class="delete-btn btn p-1 rounded-circle lh-1">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </div>

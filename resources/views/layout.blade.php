@@ -12,15 +12,25 @@
             </button>
             <div class="pt-3 pt-md-0 collapse navbar-collapse" id="navbarToggler">
                 <div class="d-flex align-items-center ms-auto mt-1">
+                    
+                    <a class="link px-3 header-nav text-gray-500" href="/"> 
+                        <i class="fas fa-home pr-1"></i><span class="d-none d-sm-inline-block m-1">Home</span>
+                    </a>
+
+                    <a class="link px-3 header-nav text-gray-500" href="/recordings">
+                        <i class="fas fa-video pr-1"></i><span class="d-none d-sm-inline-block m-1">All Recordings</span>
+                    </a>
+
                     <span class="text-gray-600 fw-bolder me-3">
                         {{ Auth::user()->getAbbreviatedFullName() }}
                     </span>
-                    <a href="{{ route('logout') }}" class="btn text-gray-50 bg-blue-500 bg-blue-600-hover ms-auto">
+                    <a href="{{ route('logout') }}" class="btn text-gray-50 bg-blue-500 bg-blue-600-hover ms-auto m-1">
                         {{ __('auth.logout') }}
                     </a>
                 </div>
             </div>
         </div>
     </nav>
+    
 @yield('content')
 @endsection
