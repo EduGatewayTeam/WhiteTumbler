@@ -3,7 +3,7 @@
 
 namespace App;
 
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +26,7 @@ class Meeting
     /**
      * @var Room
      * @ORM\ManyToOne(targetEntity="Room", inversedBy="meetings")
+     * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $room;
 
@@ -46,6 +47,18 @@ class Meeting
      * @ORM\Column(type="datetime", nullable=true)
      */
     public $deactivateAt;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="moderatingMeetings")
+     * @ORM\JoinTable(name="meetings_moderators", joinColumns={@ORM\JoinColumn(onDelete="cascade")})
+     */
+    protected $moderators;
+
+    public function __construct()
+    {
+        $this->moderators = new ArrayCollection();
+    }
 
     /**
      * @return Room
@@ -109,6 +122,24 @@ class Meeting
     public function setDeactivateAt(\DateTime $deactivateAt = null): void
     {
         $this->deactivateAt = $deactivateAt;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addModerator(User $user)
+    {
+        $user->addModeratingMeeting($this);
+        $this->moderators[] = $user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function removeModerator(User $user)
+    {
+        $user->removeModeratingMeeting($this);
+        $this->moderators->removeElement($user);
     }
 
 }

@@ -32,17 +32,26 @@ class Room implements \JsonSerializable
     /**
      * @var User
      * @ORM\ManyToOne(targetEntity="User", inversedBy="rooms")
+     * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $creator;
 
     /**
+     * @var Meeting
      * @ORM\OneToMany(targetEntity="Meeting", mappedBy="room")
      */
     protected $meetings;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="moderatingRooms")
+     * @ORM\JoinTable(name="rooms_moderators", joinColumns={@ORM\JoinColumn(onDelete="cascade")})
+     */
+    protected $moderators;
+
     public function __construct()
     {
         $this->meetings = new ArrayCollection();
+        $this->moderators = new ArrayCollection();
     }
 
     /**
@@ -83,6 +92,12 @@ class Room implements \JsonSerializable
     public function getMeetings()
     {
         return $this->meetings;
+    }
+
+    public function addModerator(User $user)
+    {
+        $user->addModeratingRoom($this);
+        $this->moderators[] = $user;
     }
 
     public function jsonSerialize()
