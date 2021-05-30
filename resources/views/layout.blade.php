@@ -24,7 +24,7 @@
                     <span class="text-gray-600 fw-bolder me-3">
                         {{ Auth::user()->getAbbreviatedFullName() }}
                     </span>
-                    <a href="{{ route('logout') }}" class="btn text-gray-50 bg-blue-500 bg-blue-600-hover ms-auto m-1">
+                    <a href="{{ route('logout') }}" class="btn text-gray-50 bg-blue-500 bg-blue-600-hover ms-auto p-1">
                         {{ __('auth.logout') }}
                     </a>
                 </div>

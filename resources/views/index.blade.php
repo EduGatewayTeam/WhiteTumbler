@@ -33,8 +33,8 @@
 
                 <div class="row">
                     <div v-for="(room, index) in rooms" class="col-12 col-sm-6 col-md-4 col-lg-3 mt-3">
-                        <div class="bg-white rounded-3">
-                            <div class="d-flex align-items-center bg-blue-900 p-2 rounded-top-3">
+                        <div class="bg-white rounded-3" @click="setSelectedRoomIndex(index)">
+                            <div class="d-flex align-items-center bg-blue-800 p-2 rounded-top-3">
                                 <a @click="openRoom(index)"
                                     href="#" class="no-underline p-0 fs-5 mb-0 ms-2 text-white text-wrap text-break text-start">
                                     @{{ room . name }}
@@ -70,6 +70,9 @@
                     </div>
                 </div>
             </div>
+
+            <room-recordings :rooms='rooms'></room-recordings>
+
         </div>
 
     </script>

@@ -3,7 +3,7 @@ import jstz from "jstz";
 import moment from "moment";
 import api from "../api";
 import { VBPopover } from "bootstrap-vue";
-
+import state from '../state'
 
 export default {
     template: "#rooms-template",
@@ -43,6 +43,10 @@ export default {
         console.log(this.roomsInit);
     },
     methods: {
+        setSelectedRoomIndex(index){
+            console.log("Selected room index is ", index);
+            state.dispatch({type: 'SET_SELECTED_ROOM_INDEX', data: {'selectedRoomIndex': index}});
+        },
         createRoom() {
             if(!this.roomName){
                 return
@@ -154,6 +158,7 @@ export default {
                             this.activeRoomIndex,
                             this.activeRoom
                         );
+
                         // this.errors = {}
                         this.meetingName = "";
                     }
