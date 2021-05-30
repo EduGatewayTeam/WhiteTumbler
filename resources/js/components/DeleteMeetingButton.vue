@@ -4,7 +4,16 @@
         v-b-popover.hover.top="'Delete meeting'"
         class="btn p-2 lh-1 rounded-circle bg-blue-50 bg-blue-400-hover me-1"
     >
+        <span
+            v-if="meetingDeleteProcessing"
+            class="spinner-border spinner-size-24"
+            role="status"
+        >
+            <span class="visually-hidden">Loading...</span>
+        </span>
+
         <svg
+            v-else
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -33,14 +42,25 @@ export default {
     directives: {
         "b-popover": VBPopover
     },
+    data() {
+        return {
+            meetingDeleteProcessing: false
+        };
+    },
     methods: {
         deleteMeeting() {
-            console.log("meetingId: ", this.meetingId)
-            
+            if (this.meetingDeleteProcessing) {
+                return;
+            }
+
+            this.meetingDeleteProcessing = true;
+            console.log("meetingId: ", this.meetingId);
             api.delete(`/meetings/${this.meetingId}`)
                 .then(response => {
                     if (response.data.errors) {
-                        this.$toast.error(`The meeting was not deleted: ${response.data.errors}`);
+                        this.$toast.error(
+                            `The meeting was not deleted: ${response.data.errors}`
+                        );
                     } else {
                         document.getElementById(`${this.meetingId}`).remove();
                         this.$toast.success(`The meeting was deleted.`);
@@ -48,8 +68,10 @@ export default {
                 })
                 .catch(error => {
                     this.$toast.error(`The meeting was not deleted: ${error}`);
-            });
-            
+                })
+                .finally(() => {
+                    this.meetingDeleteProcessing = false;
+                });
         }
     }
 };
