@@ -1,0 +1,3 @@
+[submodule "lib/DoctrineFullTextPostgres"]
+	path = lib/DoctrineFullTextPostgres
+	url = https://github.com/EduGatewayTeam/DoctrineFullTextPostgres.git
