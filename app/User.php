@@ -7,6 +7,8 @@ namespace App;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Contracts\Auth\Authenticatable;
+use VertigoLabs\DoctrineFullTextPostgres\ORM\Mapping\TsVector;
+use Doctrine\Orm\Mapping\Column;
 
 /**
  * Class User
@@ -57,6 +59,11 @@ class User implements Authenticatable
      * @ORM\ManyToMany(targetEntity="Meeting", mappedBy="moderators")
      */
     protected $moderatingMeetings;
+
+    /**
+     * @TsVector(source="prepareTsVector")
+     */
+    protected $tsvector;
 
     public function __construct($id, $name, $family_name)
     {
@@ -208,6 +215,10 @@ class User implements Authenticatable
     public function removeModeratingMeeting(Meeting $meeting)
     {
         $this->moderatingMeetings->removeElement($meeting);
+    }
+
+    public function prepareTsVector() {
+        return [$this->name, $this->family_name];
     }
 
 }

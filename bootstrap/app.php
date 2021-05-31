@@ -11,6 +11,9 @@
 |
 */
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use VertigoLabs\DoctrineFullTextPostgres\AnnotationLoader;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -40,6 +43,12 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
+
+AnnotationRegistry::registerLoader([
+    new AnnotationLoader,
+    'loadClass'
+]);
+// AnnotationRegistry::registerAutoloadNamespace('VertigoLabs\\DoctrineFullTextPostgres\\', 'lib/DoctrineFullTextPostgres/src/');
 
 /*
 |--------------------------------------------------------------------------
