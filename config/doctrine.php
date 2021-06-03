@@ -46,7 +46,9 @@ return [
             */
             'events'        => [
                 'listeners'   => [],
-                'subscribers' => []
+                'subscribers' => [
+                    VertigoLabs\DoctrineFullTextPostgres\Common\TsVectorSubscriber::class
+                ]
             ],
             'filters'       => [],
             /*
@@ -72,7 +74,7 @@ return [
             |--------------------------------------------------------------------------
             */
             'mapping_types' => [
-                //'enum' => 'string'
+                'tsvector' => 'tsvector'
             ]
         ]
     ],
@@ -108,6 +110,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'custom_types'               => [
+        'tsvector' => VertigoLabs\DoctrineFullTextPostgres\DBAL\Types\TsVector::class
     ],
     /*
     |--------------------------------------------------------------------------
@@ -126,7 +129,12 @@ return [
     | DQL custom string functions
     |--------------------------------------------------------------------------
     */
-    'custom_string_functions'    => [],
+    'custom_string_functions'    => [
+        'tsquery' => VertigoLabs\DoctrineFullTextPostgres\ORM\Query\AST\Functions\TsQueryFunction::class,
+        'tsplainquery' => VertigoLabs\DoctrineFullTextPostgres\ORM\Query\AST\Functions\TsPlainQueryFunction::class,
+        'tsrank' => VertigoLabs\DoctrineFullTextPostgres\ORM\Query\AST\Functions\TsRankFunction::class,
+        'tsrankcd' => VertigoLabs\DoctrineFullTextPostgres\ORM\Query\AST\Functions\TsRankCDFunction::class
+    ],
     /*
     |--------------------------------------------------------------------------
     | Register custom hydrators
