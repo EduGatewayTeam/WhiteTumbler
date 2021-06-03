@@ -1,9 +1,9 @@
 <script>
-import jstz from "jstz";
-import moment from "moment";
-import api from "../api";
-import { VBPopover } from "bootstrap-vue";
-import state from '../state'
+import jstz from "jstz"; // import lib for timezone detection
+import moment from "moment"; // import lib for manipulating dates
+import { VBPopover } from "bootstrap-vue"; // import lib for pop-overs
+import api from "../api"; // import instance of axios
+import state from "../state"; // import app state
 
 export default {
     template: "#rooms-template",
@@ -15,17 +15,17 @@ export default {
     },
     data() {
         if (!sessionStorage.getItem("timezone")) {
-            var tz = jstz.determine() || "UTC";
+            let tz = jstz.determine() || "UTC";
             sessionStorage.setItem("timezone", tz.name());
         }
-        var currTz = sessionStorage.getItem("timezone");
+
+        let currTz = sessionStorage.getItem("timezone");
 
         return {
             rooms: this.roomsInit,
             roomCreateProcessing: false,
             roomDeleteProcessing: false,
             roomName: "",
-            delitingRoomIndex: null,
             errors: {
                 request: "",
                 roomName: ""
@@ -43,13 +43,15 @@ export default {
         console.log(this.roomsInit);
     },
     methods: {
-        setSelectedRoomIndex(index){
-            console.log("Selected room index is ", index);
-            state.dispatch({type: 'SET_SELECTED_ROOM_INDEX', data: {'selectedRoomIndex': index}});
+        setSelectedRoomIndex(index) {
+            state.dispatch({
+                type: "SET_SELECTED_ROOM_INDEX",
+                data: { selectedRoomIndex: index }
+            });
         },
         createRoom() {
-            if(!this.roomName){
-                return
+            if (!this.roomName) {
+                return;
             }
 
             this.roomCreateProcessing = true;
@@ -63,16 +65,18 @@ export default {
                         this.errors = {};
                         this.roomName = "";
                         this.rooms.push(response.data);
-                        $("#addRoomModal").modal("hide");
+                        $("#add-room-modal").modal("hide");
                     }
-                    console.log(response);
                 })
                 .catch(error => {
                     this.errors = {
                         request: error
                     };
+                    this.$toast.error(
+                        `Something was wrong with room creation.`
+                    );
                 })
-                .then(() => {
+                .finally(() => {
                     this.roomCreateProcessing = false;
                 });
         },
@@ -80,35 +84,32 @@ export default {
             this.activeRoom = this.rooms[roomIndex];
             this.activeRoomIndex = roomIndex;
             $("#roomPage").modal("show");
-            console.log("Room name: " + this.activeRoom.name);
             this.meetings = this.checkMeetingActivation(
                 this.rooms[roomIndex].meetings
             );
         },
-        openRoomSettings(roomIndex){
-            $("#roomSettingsModal").modal("show");
+        openRoomSettings(roomIndex) {
+            $("#room-settings-modal").modal("show");
+            this.activeRoomIndex = roomIndex;
         },
 
-        // refactor two functions in one
         deleteRoom(roomIndex) {
-            $("#confirmDeleteModal").modal("show");
-            this.delitingRoomIndex = roomIndex;
+            $("#confirm-delete-modal").modal("show");
+            this.activeRoomIndex = roomIndex;
         },
         deleteRoomConfirm() {
             this.roomDeleteProcessing = true;
-            console.log(this.delitingRoomIndex);
 
-            api.delete(`/rooms/${this.rooms[this.delitingRoomIndex].id}`)
+            api.delete(`/rooms/${this.rooms[this.activeRoomIndex].id}`)
                 .then(response => {
                     if (response.data.errors) {
                         this.errors = response.data.errors;
                     } else {
                         this.errors = {};
-                        this.rooms.splice(this.delitingRoomIndex, 1);
-                        $("#confirmDeleteModal").modal("hide");
+                        this.rooms.splice(this.activeRoomIndex, 1);
+                        $("#confirm-delete-modal").modal("hide");
                         this.$toast.success(`The room was deleted.`);
                     }
-                    console.log("response: ", response);
                 })
                 .catch(error => {
                     this.errors = {
@@ -118,8 +119,8 @@ export default {
                     console.log(error);
                 })
                 .finally(() => {
-                    $("#confirmDeleteModal").modal("hide");
-                    this.delitingRoomIndex = null;
+                    $("#confirm-delete-modal").modal("hide");
+                    this.activeRoomIndex = null;
                     this.roomDeleteProcessing = false;
                 });
         },
@@ -147,7 +148,7 @@ export default {
             })
                 .then(response => {
                     if (response.data.errors) {
-                        // this.errors = response.data.errors
+                        //this.errors = response.data.errors
                     } else {
                         this.activeRoom.meetings.push(response.data);
                         this.meetings = this.checkMeetingActivation(
@@ -158,9 +159,6 @@ export default {
                             this.activeRoomIndex,
                             this.activeRoom
                         );
-
-                        // this.errors = {}
-                        this.meetingName = "";
                     }
                 })
                 .catch(error => {
@@ -168,17 +166,17 @@ export default {
                         request: error
                     };
                 })
-                .then(() => {
+                .finally(() => {
                     this.newMeetingProcessing = false;
+                    this.meetingName = "";
                 });
-                this.meetingName = "";
         },
         checkMeetingActivation(meetings) {
             meetings.forEach(function(meeting, index) {
                 let now = new Date(),
                     meetingActivateDate = new Date(meeting.activateAt.date);
                 if (meeting.deactivateAt !== null) {
-                    var meetingDeactivateDate = new Date(
+                    let meetingDeactivateDate = new Date(
                         meeting.deactivateAt.date
                     );
                     if (now.getTime() >= meetingActivateDate.getTime()) {

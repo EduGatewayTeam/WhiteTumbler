@@ -3,18 +3,14 @@
 @push('components')
     <script type="text/x-template" id="rooms-template">
         <div>
-            
-            {{-- Modal window for confirming deletion --}}
-            @include('confirmDeleteModal')
 
-            {{-- Modal window for updating room --}}
-            @include('roomSettings')
+            @include('modals.confirm-delete-modal')
 
-            {{-- Modal window for adding a room --}}
-            @include('addRoomModal')
+            @include('modals.room-settings-modal')
+
+            @include('modals.add-room-modal')
             
-            {{-- Modal for room managing --}}
-            @include('manageRoomModal')
+            @include('modals.manage-room-modal')
 
             <div class="m-4 md:m-12">
                 <div class="d-flex align-items-center justify-content-between">
@@ -22,7 +18,7 @@
                         Rooms
                     </span>
                     <button type="button" class="btn p-2 border-0 bg-blue-500 bg-blue-600-hover text-white rounded-circle lh-1"
-                            data-bs-toggle="modal" data-bs-target="#addRoomModal"
+                            data-bs-toggle="modal" data-bs-target="#add-room-modal"
                             v-b-popover.hover.left="'Create room'"
                         >
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
@@ -33,18 +29,23 @@
 
                 <div class="row">
                     <div v-for="(room, index) in rooms" class="col-12 col-sm-6 col-md-4 col-lg-3 mt-3">
+                        
                         <div class="bg-white rounded-3" @click="setSelectedRoomIndex(index)">
+                            
                             <div class="d-flex align-items-center bg-blue-800 p-2 rounded-top-3">
+                                <i class="fas fa-chalkboard-teacher text-white"> </i>
                                 <a @click="openRoom(index)"
-                                    href="#" class="no-underline p-0 fs-5 mb-0 ms-2 text-white text-wrap text-break text-start">
+                                    href="#" class="mx-3 text-white font-semibold text-white room-name-link">
                                     @{{ room . name }}
                                 </a>
+
                             </div>
+
                             <div class="px-3 py-4 flex">
                                 <p class="py-2 mb-0">Последняя сессия:</p><p class="mb-0">Ноябрь 28, 2020</p>
                                 <hr>
                                 <div class="d-flex align-items-center mt-4 text-gray-700">
-                                    <svg height="32" width="32" class="w-6 h-6 fill-current" viewBox="0 0 512 512">
+                                    <svg height="24" width="24" class="w-6 h-6 fill-current" viewBox="0 0 512 512">
                                         <path d="M239.208 343.937c-17.78 10.103-38.342 15.876-60.255 15.876-21.909 0-42.467-5.771-60.246-15.87C71.544 358.331 42.643 406 32 448h293.912c-10.639-42-39.537-89.683-86.704-104.063zM178.953 120.035c-58.479 0-105.886 47.394-105.886 105.858 0 58.464 47.407 105.857 105.886 105.857s105.886-47.394 105.886-105.857c0-58.464-47.408-105.858-105.886-105.858zm0 186.488c-33.671 0-62.445-22.513-73.997-50.523H252.95c-11.554 28.011-40.326 50.523-73.997 50.523z" />
                                         <g>
                                             <path d="M322.602 384H480c-10.638-42-39.537-81.691-86.703-96.072-17.781 10.104-38.343 15.873-60.256 15.873-14.823 0-29.024-2.654-42.168-7.49-7.445 12.47-16.927 25.592-27.974 34.906C289.245 341.354 309.146 364 322.602 384zM306.545 200h100.493c-11.554 28-40.327 50.293-73.997 50.293-8.875 0-17.404-1.692-25.375-4.51a128.411 128.411 0 0 1-6.52 25.118c10.066 3.174 20.779 4.862 31.895 4.862 58.479 0 105.886-47.41 105.886-105.872 0-58.465-47.407-105.866-105.886-105.866-37.49 0-70.427 19.703-89.243 49.09C275.607 131.383 298.961 163 306.545 200z" />
@@ -61,6 +62,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
 
                     <div v-if="rooms.length === 0" class="my-5 text-center">
@@ -70,6 +72,8 @@
                     </div>
                 </div>
             </div>
+
+            <hr class="border-b-2 border-gray-400 my-8 mx-4">
 
             <room-recordings :rooms='rooms'></room-recordings>
 

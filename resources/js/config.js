@@ -1,5 +1,4 @@
-// toast settings
-export const options = {
+export const toast_options = {
     position: "top-right",
     timeout: 2500,
     closeOnClick: true,

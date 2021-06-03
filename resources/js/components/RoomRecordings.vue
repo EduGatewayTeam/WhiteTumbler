@@ -1,7 +1,6 @@
 <template>
     <div class="m-4 md:m-12">
-        <span class="fs-3 text-gray-700">Записи комнаты</span>
-        <hr />
+        <span class="fs-4 text-gray-700">Записи комнаты</span>
         <div class="row">
             <div class="col-12">
                 <table class="table table-image">
@@ -18,13 +17,13 @@
                         <tr>
                             <td
                                 colspan="7"
-                                class="text-center fs-4 text-gray-700"
+                                class="text-center fs-5 text-gray-500"
                             >
                                 You currently have no recordings.
                             </td>
                         </tr>
-
-                        <!-- <tr>
+                        <!--
+                        <tr>
                             <td>ДПО дистант 1</th>
                             <td class="w-25">
                                 <img
@@ -50,7 +49,8 @@
                             <td>2 h 23 min</td>
                             <td>12</td>
                             <td>Public</td>
-                        </tr> -->
+                        </tr>
+                        -->
                     </tbody>
                 </table>
             </div>
@@ -60,8 +60,6 @@
 
 <script>
 import state from "../state";
-
-function handleChange() {}
 
 let roomRecordings = {
     props: {
