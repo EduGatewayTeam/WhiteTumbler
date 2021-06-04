@@ -25,4 +25,7 @@ More documentation on [official site](http://www.laraveldoctrine.org/docs/1.4/mi
 ## Development with Docker
 
 1. Copy and rename docker-compose.yml.example to docker-compose.yml
-1. Run docker-compose build && docker-compose up -d
+2. Run <pre>docker-compose build && docker-compose up -d</pre>
+3. Go inside container with command: <pre>docker-compose exec laravel /bin/bash</pre>
+4. Run command: <pre>npm build dev</pre>
+5. To autorebuild after changes use <pre>npm build watch<pre>
