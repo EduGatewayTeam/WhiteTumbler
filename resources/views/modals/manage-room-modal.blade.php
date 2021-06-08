@@ -58,7 +58,7 @@
                     </span>
                 </div>
 
-                <div class="mt-2 d-flex align-items-center">
+                <div id="create-meeting-form" class="mt-2 d-flex align-items-center">
                     
                     <div class="me-2">
                         <input :disabled="newMeetingProcessing" v-model="meetingName"
@@ -66,7 +66,9 @@
                             id="inputRoomCreateName" placeholder="{{ __('rooms.meeting-name') }}" required>
                     </div>
 
-                    <date-time-picker v-on:sendDataTimeRange="getDataTimeRange"></date-time-picker>
+
+                    <schedule-meetings></schedule-meetings>
+                    {{-- <date-time-picker v-on:sendDataTimeRange="getDataTimeRange"></date-time-picker> --}}
 
                     <div v-b-popover.hover.top="'Create meeting'">
                         <button @click="addMeeting" type="button"

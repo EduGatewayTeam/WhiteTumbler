@@ -10,6 +10,7 @@ import Rooms from "./components/Rooms.vue";
 import CopyToClipboard from "./components/CopyToClipboard.vue";
 import DeleteMeting from "./components/DeleteMeetingButton.vue";
 import RoomRecordings from "./components/RoomRecordings.vue";
+import ScheduleMeetings from './components/ScheduleMeetings';
 
 // import style files
 import "../scss/app.scss";
@@ -25,6 +26,7 @@ Vue.component("copy-link-to-clipboard", CopyToClipboard);
 Vue.component("delete-meeting", DeleteMeting);
 Vue.component("room-recordings", RoomRecordings);
 Vue.component("date-time-picker", DateTimePicker);
+Vue.component("schedule-meetings", ScheduleMeetings);
 Vue.component("w-rooms", Rooms);
 
 VueClipboard.config.autoSetContainer = true;

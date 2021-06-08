@@ -27,12 +27,19 @@ export default {
 </script>
 
 <template>
-    <div>
+    <div class="d-flex">
+        <date-picker
+            v-if="isVisible"
+            @input="sendData"
+            v-model="dataTimeRange"
+            type="datetime"
+            range
+            placeholder="Select time when room is active(optional)"
+        ></date-picker>
         <div
             v-b-popover.hover.top="'Select date and time when room is active'"
-            v-if="!isVisible"
             @click="changeVisibility"
-            class="me-2"
+            class="m-1"
         >
             <svg
                 class="dateTimeIcon"
@@ -46,15 +53,6 @@ export default {
                 ></path>
             </svg>
         </div>
-
-        <date-picker
-            v-if="isVisible"
-            @input="sendData"
-            v-model="dataTimeRange"
-            type="datetime"
-            range
-            placeholder="Select time when room is active(optional)"
-        ></date-picker>
     </div>
 </template>
 
