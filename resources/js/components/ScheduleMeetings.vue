@@ -4,21 +4,21 @@ import { VBPopover } from "bootstrap-vue";
 
 import "vue2-datepicker/index.css";
 
+import state from "../state";
+
 export default {
     components: { DatePicker },
     data() {
         return {
             sessions: null,
             isVisible: false,
-            timeRange: null,
             daysArray: [
-                {"dayname": "monday", },
-                {"dayname": "tuesday", },
-                {"dayname": "wednesday", },
-                {"dayname": "thursday", },
-                {"dayname": "friday", },
-                {"dayname": "saturday", },
-
+                {"dayname": "monday", "even": null, "odd": null},
+                {"dayname": "tuesday", "even": null, "odd": null},
+                {"dayname": "wednesday", "even": null, "odd": null},
+                {"dayname": "thursday", "even": null, "odd": null},
+                {"dayname": "friday", "even": null, "odd": null},
+                {"dayname": "saturday", "even": null, "odd": null},
             ]
         };
     },
@@ -40,7 +40,7 @@ export default {
         },
         changeVisibility() {
             let createMeetingForm = document.getElementById("create-meeting-form");
-            if(this.isVisible){
+            if (this.isVisible){
                 // если было раскрыто
                 createMeetingForm.className = "mt-2 d-flex align-items-center"
             }
@@ -48,7 +48,18 @@ export default {
                 // если было свернуто
                 createMeetingForm.className = "mt-2 d-flex flex-column justify-content-around"
             }
+
+            if(this.isVisible) {
+                state.getState().daysArray = [];
+                this.daysArray.forEach( (day) => { day.even = null; day.odd = null; } );
+            }
+            console.log(state.getState());
             this.isVisible = !this.isVisible;
+        },
+        setShedule(){
+            state.getState().daysArray = [...this.daysArray];
+            console.log(this.daysArray);
+            console.log('State: ', state.getState());
         }
     }
 };
@@ -100,7 +111,7 @@ export default {
 
         <div v-if="isVisible" class="col-md-12 form-group p-1">
             <div 
-                class="d-flex justify-content-around" 
+                class="d-flex" 
                 :id="`even-time-range-${day.dayname}`" 
                 v-for="(day) in daysArray" 
                 :key="`even-time-range-${day.dayname}`"
@@ -109,14 +120,15 @@ export default {
                 <label class="m-1 p-1">Even {{day.dayname}}: </label>
                 <date-picker
                     v-if="isVisible"
-                    v-model="timeRange"
+                    @input="setShedule"
+                    v-model="day.even"
                     type="time"
                     range
                     placeholder="Select time when room is active"
                 ></date-picker>
             </div>
             <div 
-                class="d-flex justify-content-around" 
+                class="d-flex" 
                 :id="`odd-time-range-${day.dayname}`" 
                 v-for="(day) in daysArray" 
                 :key="`odd-time-range-${day.dayname}`"
@@ -125,7 +137,7 @@ export default {
                 <label class="m-1 p-1">Odd {{day.dayname}}: </label>
                 <date-picker
                     v-if="isVisible"
-                    v-model="timeRange"
+                    v-model="day.odd"
                     type="time"
                     range
                     placeholder="Select time when room is active"

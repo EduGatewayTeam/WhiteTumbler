@@ -1,7 +1,8 @@
 import { createStore } from "redux";
 
 let defaultState = {
-    selectedRoomIndex: null
+    selectedRoomIndex: null,
+    daysArray: []
 };
 
 function reducer(state = defaultState, action) {

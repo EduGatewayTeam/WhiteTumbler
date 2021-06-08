@@ -5,6 +5,8 @@ import { VBPopover } from "bootstrap-vue"; // import lib for pop-overs
 import api from "../api"; // import instance of axios
 import state from "../state"; // import app state
 
+window.state = state;
+
 export default {
     template: "#rooms-template",
     props: {
@@ -133,6 +135,39 @@ export default {
                 return;
             }
 
+            debugger
+
+            let sessions = [];
+            let shedule = state.getState().daysArray;
+
+            if (shedule) {
+                
+                shedule.forEach( (day, index) => {
+                    
+                    day.even ?
+                        sessions.push({
+                            day_type: "even",
+                            week_day: index + 1,
+                            time_start: day.even[0],
+                            time_end: day.even[1]
+                        })
+                    :
+                        null;
+
+                    day.odd ?
+                        sessions.push({
+                            day_type: "odd",
+                            week_day: index + 1,
+                            time_start: day.odd[0],
+                            time_end: day.odd[1]
+                        })
+                    :
+                        null;
+                });
+            }
+
+            console.log("sessions: ", sessions);
+
             this.newMeetingProcessing = true;
             let activationDate = this.dateTimeRange
                 ? this.dateTimeRange[0]
@@ -143,6 +178,7 @@ export default {
             api.post("/meetings", {
                 roomId: this.activeRoom.id,
                 name: this.meetingName,
+                sessions,
                 activationDate,
                 deactivationDate
             })
