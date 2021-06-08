@@ -51,10 +51,16 @@ class LoginController extends Controller
         $repository = $em->getRepository(User::class);
         $user = $repository->find($uuid);
         if ($user == null) {
-            $user = new User($uuid, $socialiteUser->user['name'], $socialiteUser->user['family_name']);
+            $user = new User(
+                $uuid,
+                $socialiteUser->user['given_name'],
+                $socialiteUser->user['family_name'],
+                $socialiteUser->user['patronymic']);
             $em->persist($user);
         } else {
-            $user->setName($socialiteUser->name);
+            $user->setName($socialiteUser->user['given_name']);
+            $user->setSurname($socialiteUser->user['family_name']);
+            $user->setPatronymic($socialiteUser->user['patronymic']);
         }
         $em->flush();
 

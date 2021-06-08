@@ -41,7 +41,13 @@ class User implements Authenticatable
      * @var string
      * @ORM\Column
      */
-    protected $family_name;
+    protected $surname;
+
+    /**
+     * @var string
+     * @ORM\Column
+     */
+    protected $patronymic;
 
     /**
      * @ORM\OneToMany(targetEntity="Room", mappedBy="creator")
@@ -55,21 +61,16 @@ class User implements Authenticatable
     protected $moderatingRooms;
 
     /**
-     * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Meeting", mappedBy="moderators")
-     */
-    protected $moderatingMeetings;
-
-    /**
      * @TsVector(source="prepareTsVector")
      */
     protected $tsvector;
 
-    public function __construct($id, $name, $family_name)
+    public function __construct($id, $name, $surname, $patronymic)
     {
         $this->id = $id;
         $this->name = ucfirst($name);
-        $this->family_name = ucfirst($family_name);
+        $this->surname = ucfirst($surname);
+        $this->patronymic = ucfirst($patronymic);
         $this->rooms = new ArrayCollection();
         $this->moderatingRooms = new ArrayCollection();
     }
@@ -156,25 +157,46 @@ class User implements Authenticatable
     /**
      * @return string
      */
-    public function getFamilyName(): string
+    public function getSurname(): string
     {
-        return $this->family_name;
+        return $this->surname;
     }
 
     /**
      * @param string $name
      */
-    public function setFamilyName(string $family_name): void
+    public function setSurname(string $surname): void
     {
-        $this->family_name = $family_name;
+        $this->surname = $surname;
     }
+
+    /**
+     * Get the value of patronymic
+     *
+     * @return  string
+     */
+    public function getPatronymic()
+    {
+        return $this->patronymic;
+    }
+
+    /**
+     * Set the value of patronymic
+     *
+     * @param  string  $patronymic
+     */
+    public function setPatronymic(string $patronymic)
+    {
+        $this->patronymic = $patronymic;
+    }
+
 
     /**
      * @return string
      */
     public function getFullName(): string
     {
-        return $this->family_name.' '.$this->name;
+        return $this->surname.' '.$this->name;
     }
 
     /**
@@ -182,7 +204,7 @@ class User implements Authenticatable
      */
     public function getAbbreviatedFullName(): string
     {
-        return $this->family_name.' '.$this->name[0].'.';
+        return $this->surname.' '.$this->name[0].'.';
     }
 
     /**
@@ -218,7 +240,7 @@ class User implements Authenticatable
     }
 
     public function prepareTsVector() {
-        return [$this->name, $this->family_name];
+        return [$this->name, $this->surname, $this->patronymic];
     }
 
 }
