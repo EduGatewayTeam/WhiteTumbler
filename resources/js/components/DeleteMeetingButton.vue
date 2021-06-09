@@ -54,7 +54,6 @@ export default {
             }
 
             this.meetingDeleteProcessing = true;
-            console.log("meetingId: ", this.meetingId);
             api.delete(`/meetings/${this.meetingId}`)
                 .then(response => {
                     if (response.data.errors) {

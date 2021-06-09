@@ -43,11 +43,15 @@ export default {
     },
     mounted() {
         console.log(this.roomsInit);
+        state.dispatch({
+            type: "SET_ROOMS",
+            data: { rooms: this.roomsInit }
+        });
     },
     methods: {
         setSelectedRoomIndex(index) {
             state.dispatch({
-                type: "SET_SELECTED_ROOM_INDEX",
+                type: "SET_ACTIVE_ROOM",
                 data: { selectedRoomIndex: index }
             });
         },
@@ -118,7 +122,6 @@ export default {
                         request: error
                     };
                     this.$toast.error(`The room was not deleted.`);
-                    console.log(error);
                 })
                 .finally(() => {
                     $("#confirm-delete-modal").modal("hide");
@@ -127,7 +130,6 @@ export default {
                 });
         },
         getDataTimeRange(dateTimeRange) {
-            console.log("getDataTimeRange: ", dateTimeRange);
             this.dateTimeRange = dateTimeRange;
         },
         addMeeting() {
@@ -138,7 +140,7 @@ export default {
             debugger
 
             let sessions = [];
-            let shedule = state.getState().daysArray;
+            let shedule = state.getState().shedule;
 
             if (shedule) {
                 
@@ -165,8 +167,6 @@ export default {
                         null;
                 });
             }
-
-            console.log("sessions: ", sessions);
 
             this.newMeetingProcessing = true;
             let activationDate = this.dateTimeRange

@@ -13,12 +13,20 @@ export default {
             sessions: null,
             isVisible: false,
             daysArray: [
-                {"dayname": "monday", "even": null, "odd": null},
-                {"dayname": "tuesday", "even": null, "odd": null},
-                {"dayname": "wednesday", "even": null, "odd": null},
-                {"dayname": "thursday", "even": null, "odd": null},
-                {"dayname": "friday", "even": null, "odd": null},
-                {"dayname": "saturday", "even": null, "odd": null},
+                {"dayname": "monday", "number": 1, },
+                {"dayname": "tuesday", "number": 2},
+                {"dayname": "wednesday", "number": 3},
+                {"dayname": "thursday", "number": 4},
+                {"dayname": "friday", "number": 5},
+                {"dayname": "saturday", "number": 6},
+            ],
+            shedule: [
+                {"even": null, "odd": null},
+                {"even": null, "odd": null},
+                {"even": null, "odd": null},
+                {"even": null, "odd": null},
+                {"even": null, "odd": null},
+                {"even": null, "odd": null},
             ]
         };
     },
@@ -50,16 +58,14 @@ export default {
             }
 
             if(this.isVisible) {
-                state.getState().daysArray = [];
-                this.daysArray.forEach( (day) => { day.even = null; day.odd = null; } );
+                state.getState().shedule = [];
+                this.shedule.forEach( (day) => { day.even = null; day.odd = null; } );
             }
             console.log(state.getState());
             this.isVisible = !this.isVisible;
         },
         setShedule(){
-            state.getState().daysArray = [...this.daysArray];
-            console.log(this.daysArray);
-            console.log('State: ', state.getState());
+            state.getState().shedule = [...this.shedule];
         }
     }
 };
