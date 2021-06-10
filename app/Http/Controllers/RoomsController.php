@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Room;
+use App\Schedule;
 use App\User;
 use Collective\Annotations\Routing\Annotations\Annotations\Middleware;
 use Collective\Annotations\Routing\Annotations\Annotations\Post;
@@ -40,6 +41,34 @@ class RoomsController extends Controller
         $em->flush();
 
         return new JsonResponse($room);
+    }
+
+
+    /**
+     * @param $roomId
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     * @Patch("/room/{roomId}", middleware="web")
+     * @Middleware("auth")
+     */
+    public function updateRoom($roomId, Request $request, EntityManagerInterface $em) {
+        $repository = $em->getRepository(Room::class);
+        $room = $repository->find($roomId);
+
+        $room->clearSchedules();
+        $em->flush();
+
+        foreach ($request->get('schedule') as $schedule) {
+            $room->addSchedule(new Schedule(
+                $schedule['day_type'],
+                $schedule['week_day'],
+                $schedule['time_start'],
+                $schedule['time_end']));
+        }
+        $em->flush();
+
+        return new JsonResponse(['result' => 'ok']);
     }
 
 

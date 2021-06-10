@@ -21,14 +21,14 @@ class MainController extends Controller
      */
     public function redirectToProvider()
     {
-        $rooms = array_map(function ($room) {
-            return [
-                'id' => $room->id,
-                'name' => $room->name,
-                'meetings' => $room->getMeetings()->toArray()
-            ];
-        }, Auth::user()->getRooms()->toArray());
-        return view('index', ['rooms' => $rooms]);
+        // $rooms = array_map(function ($room) {
+        //     return [
+        //         'id' => $room->id,
+        //         'name' => $room->name,
+        //         'schedule' => $room->getSchedules()->toArray()
+        //     ];
+        // }, );
+        return view('index', ['rooms' => Auth::user()->getRooms()->toArray()]);
     }
 
 

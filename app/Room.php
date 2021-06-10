@@ -48,10 +48,17 @@ class Room implements \JsonSerializable
      */
     protected $moderators;
 
+    /**
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="Schedule", mappedBy="room", cascade={"all"}, orphanRemoval=true)
+     */
+    protected $schedules;
+
     public function __construct()
     {
         $this->meetings = new ArrayCollection();
         $this->moderators = new ArrayCollection();
+        $this->schedules = new ArrayCollection();
     }
 
     /**
@@ -105,7 +112,20 @@ class Room implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'meetings' => $this->getMeetings()->toArray()
+            'schedule' => $this->getSchedules()->toArray()
         ];
+    }
+
+    public function addSchedule(Schedule $schedule) {
+        $schedule->setRoom($this);
+        $this->schedules[] = $schedule;
+    }
+
+    public function clearSchedules() {
+        $this->schedules->clear();
+    }
+
+    public function getSchedules() {
+        return $this->schedules;
     }
 }
