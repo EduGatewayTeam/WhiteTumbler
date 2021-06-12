@@ -24,7 +24,7 @@ class Meeting
 
     /**
      * @var Room
-     * @ORM\ManyToOne(targetEntity="Room", inversedBy="meetings")
+     * @ORM\OneToOne(targetEntity="Room", inversedBy="meetings")
      * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $room;
@@ -33,20 +33,25 @@ class Meeting
      * @var string
      * @ORM\Column
      */
-    public $name;
+    protected $attendeePassword;
+
+    /**
+     * @var string
+     * @ORM\Column
+     */
+    protected $moderatorPassword;
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Column(type="datetime")
      */
-    public $activateAt;
+    public $startTime;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
+     * @var integer
+     * @ORM\Column
      */
-    public $deactivateAt;
-
+    public $duration;
 
 
     /**
@@ -63,6 +68,7 @@ class Meeting
     public function setRoom(Room $room): void
     {
         $this->room = $room;
+        $room->setMeeting($this);
     }
 
     /**
@@ -82,35 +88,98 @@ class Meeting
     }
 
     /**
-     * @return \DateTime
+     * Get the value of attendeePassword
+     *
+     * @return  string
      */
-    public function getActivateAt(): \DateTime
+    public function getAttendeePassword()
     {
-        return $this->getActivateAt;
+        return $this->attendeePassword;
     }
 
     /**
-     * @param \DateTime $activateAt
+     * Set the value of attendeePassword
+     *
+     * @param  string  $attendeePassword
+     *
+     * @return  self
      */
-    public function setActivateAt(\DateTime $activateAt): void
+    public function setAttendeePassword(string $attendeePassword)
     {
-        $this->activateAt = $activateAt;
+        $this->attendeePassword = $attendeePassword;
+
+        return $this;
     }
 
     /**
-     * @return \DateTime
+     * Get the value of moderatorPassword
+     *
+     * @return  string
      */
-    public function getDeactivateAt(): \DateTime
+    public function getModeratorPassword()
     {
-        return $this->getDeactivateAt;
+        return $this->moderatorPassword;
     }
 
     /**
-     * @param \DateTime $deactivateAt
+     * Set the value of moderatorPassword
+     *
+     * @param  string  $moderatorPassword
+     *
+     * @return  self
      */
-    public function setDeactivateAt(\DateTime $deactivateAt = null): void
+    public function setModeratorPassword(string $moderatorPassword)
     {
-        $this->deactivateAt = $deactivateAt;
+        $this->moderatorPassword = $moderatorPassword;
+
+        return $this;
     }
 
+    /**
+     * Get the value of startTime
+     *
+     * @return  \DateTime
+     */
+    public function getStartTime()
+    {
+        return $this->startTime;
+    }
+
+    /**
+     * Set the value of startTime
+     *
+     * @param  \DateTime  $startTime
+     *
+     * @return  self
+     */
+    public function setStartTime(\DateTime $startTime)
+    {
+        $this->startTime = $startTime;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of duration
+     *
+     * @return  integer
+     */
+    public function getDuration()
+    {
+        return $this->duration;
+    }
+
+    /**
+     * Set the value of duration
+     *
+     * @param  integer  $duration
+     *
+     * @return  self
+     */
+    public function setDuration($duration)
+    {
+        $this->duration = $duration;
+
+        return $this;
+    }
 }

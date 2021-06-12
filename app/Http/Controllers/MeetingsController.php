@@ -25,7 +25,7 @@ class MeetingsController extends Controller
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return JsonResponse
-     * @Post("/meetings", middleware="web")	
+     * @Post("/meetings", middleware="web")
      * @Middleware("auth")
      */
     public function newMeeting(Request $request, EntityManagerInterface $em) {
@@ -70,10 +70,10 @@ class MeetingsController extends Controller
         if ($meeting->activateAt > new DateTime()){
             return view('waitMeeting');
         }
-        
+
         if ($meeting->deactivateAt != null && $meeting->deactivateAt < new DateTime()){
             return view('expiredMeeting');
-        }        
+        }
 
         $moderator = $meeting->getRoom()->getCreator()->getId() == $user->getId();
 
@@ -100,7 +100,7 @@ class MeetingsController extends Controller
      */
     public function delete($meetingId, EntityManagerInterface $em) {
         $user = Auth::user();
-        
+
         $repository = $em->getRepository(Meeting::class);
         $meeting = $repository->find($meetingId);
 

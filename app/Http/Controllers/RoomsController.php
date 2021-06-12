@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Meeting;
 use App\Room;
 use App\Schedule;
+use App\Service\MeetingsService;
 use App\User;
+use BigBlueButton\BigBlueButton;
+use BigBlueButton\Parameters\CreateMeetingParameters;
+use BigBlueButton\Parameters\GetMeetingInfoParameters;
+use BigBlueButton\Parameters\IsMeetingRunningParameters;
+use BigBlueButton\Parameters\JoinMeetingParameters;
 use Collective\Annotations\Routing\Annotations\Annotations\Middleware;
 use Collective\Annotations\Routing\Annotations\Annotations\Post;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +23,12 @@ use Illuminate\Support\Facades\Validator;
 
 class RoomsController extends Controller
 {
+
+    private $meetingsService;
+
+    public function __construct(EntityManagerInterface $em) {
+        $this->meetingsService = new MeetingsService($em);
+    }
 
     /**
      * @param Request $request
@@ -71,6 +85,141 @@ class RoomsController extends Controller
         return new JsonResponse(['result' => 'ok']);
     }
 
+    /**
+     * @param $roomId
+     * @param EntityManagerInterface $em
+     * @Get("/room/{roomId}/join", middleware="web")
+     * @Middleware("auth")
+     */
+    public function joinRoom($roomId, EntityManagerInterface $em) {
+        $repository = $em->getRepository(Room::class);
+
+        try {
+            /**
+             * @var Room
+             */
+            $room = $repository->find($roomId);
+        } catch (Exception $e) {
+            abort(404);
+        }
+
+
+        if ($room == null) {
+            abort(404);
+        }
+
+        if ($room->getMeeting() == null) {
+            // manual meeting, immediatly create in bbb
+            $this->meetingsService->createMeeting($room);
+        }
+
+        /**
+         * @var Meeting
+         */
+        $meeting = $room->getMeeting();
+
+        /**
+         * @var User
+         */
+        $user = Auth::user();
+
+        // if manual meeting is not running - remove, recreate?
+        $bbb                 = new BigBlueButton();
+        $createMeetingParams = new CreateMeetingParameters($meeting->id, $room->getName());
+        $createMeetingParams->setModeratorPassword($meeting->getModeratorPassword());
+        $createMeetingParams->setAttendeePassword($meeting->getAttendeePassword());
+        $response = $bbb->createMeeting($createMeetingParams);
+
+        $moderator = $room->getCreator()->getId() == $user->getId();
+
+        $joinMeetingParams = new JoinMeetingParameters($meeting->id, $user->getFullName(),
+            $moderator ? $response->getModeratorPassword() : $response->getAttendeePassword());
+        $joinMeetingParams->setRedirect(true);
+        $url = $bbb->getJoinMeetingURL($joinMeetingParams);
+
+        return redirect($url);
+        // $response = $bbb->isMeetingRunning(new IsMeetingRunningParameters($room->getMeeting()->id));
+
+        // return new JsonResponse(['running' => $response->isRunning()]);
+    }
+
+    /**
+     * @param $roomId
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @Post("/room/{roomId}/add_moderator", middleware="web")
+     * @Middleware("auth")
+     */
+    public function addModerator($roomId, Request $request, EntityManagerInterface $em) {
+        /**
+         * @var User
+         */
+        $user = Auth::user();
+
+        $moderatorId = $request->get('moderator_id');
+
+        $roomsRepository = $em->getRepository(Room::class);
+        $usersRepository = $em->getRepository(User::class);
+
+        /**
+         * @var Room
+         */
+        $room = $roomsRepository->find($roomId);
+
+        if ($room->getCreator()->getId() != $user->getId()) {
+            abort(403);
+        }
+
+        /**
+         * @var User
+         */
+        $moderator = $usersRepository->find($moderatorId);
+
+        $room->addModerator($moderator);
+
+        $em->flush();
+
+        return new JsonResponse(['result' => 'ok']);
+    }
+
+    /**
+     * @param $roomId
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @Post("/room/{roomId}/remove_moderator", middleware="web")
+     * @Middleware("auth")
+     */
+    public function removeModerator($roomId, Request $request, EntityManagerInterface $em) {
+        /**
+         * @var User
+         */
+        $user = Auth::user();
+
+        $moderatorId = $request->get('moderator_id');
+
+        $roomsRepository = $em->getRepository(Room::class);
+        $usersRepository = $em->getRepository(User::class);
+
+        /**
+         * @var Room
+         */
+        $room = $roomsRepository->find($roomId);
+
+        if ($room->getCreator()->getId() != $user->getId()) {
+            abort(403);
+        }
+
+        /**
+         * @var User
+         */
+        $moderator = $usersRepository->find($moderatorId);
+
+        $room->removeModerator($moderator);
+
+        $em->flush();
+
+        return new JsonResponse(['result' => 'ok']);
+    }
 
     /**
      * @param $roomId

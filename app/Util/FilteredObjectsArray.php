@@ -32,10 +32,17 @@ class FilteredObjectsArray {
 
     public function filter($item) {
         if ($this->with != null) {
-            return array_filter(
-                $item,
-                fn ($key) => in_array($key, $this->with),
-                ARRAY_FILTER_USE_KEY);
+            if (is_array($item)) {
+                return array_filter(
+                    $item,
+                    fn ($key) => in_array($key, $this->with),
+                    ARRAY_FILTER_USE_KEY);
+            }
+            $result = [];
+            foreach ($this->with as $key) {
+                $result[$key] = $item->$key;
+            }
+            return $result;
         }
         if ($this->without != null) {
             return array_filter(

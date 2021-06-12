@@ -24,46 +24,46 @@ class User implements Authenticatable
      * @ORM\Id
      * @ORM\Column(type="guid")
      */
-    protected $id;
+    public $id;
 
     /**
      * @ORM\Column(name="remember_token", type="string", nullable=true)
      */
-    protected $rememberToken;
+    public $rememberToken;
 
     /**
      * @var string
      * @ORM\Column
      */
-    protected $name;
+    public $name;
 
     /**
      * @var string
      * @ORM\Column
      */
-    protected $surname;
+    public $surname;
 
     /**
      * @var string
      * @ORM\Column
      */
-    protected $patronymic;
+    public $patronymic;
 
     /**
      * @ORM\OneToMany(targetEntity="Room", mappedBy="creator")
      */
-    protected $rooms;
+    public $rooms;
 
     /**
      * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="Room", mappedBy="moderators")
+     * @ORM\ManyToMany(targetEntity="Room", mappedBy="moderators", fetch="EAGER")
      */
-    protected $moderatingRooms;
+    public $moderatingRooms;
 
     /**
      * @TsVector(source="prepareTsVector")
      */
-    protected $tsvector;
+    public $tsvector;
 
     public function __construct($id, $name, $surname, $patronymic)
     {
@@ -196,7 +196,7 @@ class User implements Authenticatable
      */
     public function getFullName(): string
     {
-        return $this->surname.' '.$this->name;
+        return $this->name . ' ' . $this->surname;
     }
 
     /**
@@ -223,21 +223,6 @@ class User implements Authenticatable
         $this->moderatingRooms->removeElement($room);
     }
 
-    /**
-     * @param Meeting $meeting
-     */
-    public function addModeratingMeeting(Meeting $meeting)
-    {
-        $this->moderatingMeetings[] = $meeting;
-    }
-
-    /**
-     * @param Meeting $meeting
-     */
-    public function removeModeratingMeeting(Meeting $meeting)
-    {
-        $this->moderatingMeetings->removeElement($meeting);
-    }
 
     public function prepareTsVector() {
         return [$this->name, $this->surname, $this->patronymic];

@@ -3,6 +3,7 @@
 
 namespace App;
 
+use App\Util\FilteredObjectsArray;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,7 +17,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Room implements \JsonSerializable
 {
     /**
-     * @var integer id
      * @ORM\Id
      * @ORM\Column(type="guid")
      * @ORM\GeneratedValue(strategy="UUID")
@@ -38,12 +38,13 @@ class Room implements \JsonSerializable
 
     /**
      * @var Meeting
-     * @ORM\OneToMany(targetEntity="Meeting", mappedBy="room")
+     * @ORM\OneToOne(targetEntity="Meeting", mappedBy="room", cascade={"all"})
      */
-    protected $meetings;
+    protected $meeting;
 
     /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="moderatingRooms")
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="moderatingRooms", fetch="EAGER")
      * @ORM\JoinTable(name="rooms_moderators", joinColumns={@ORM\JoinColumn(onDelete="cascade")})
      */
     protected $moderators;
@@ -56,7 +57,6 @@ class Room implements \JsonSerializable
 
     public function __construct()
     {
-        $this->meetings = new ArrayCollection();
         $this->moderators = new ArrayCollection();
         $this->schedules = new ArrayCollection();
     }
@@ -96,9 +96,16 @@ class Room implements \JsonSerializable
     /**
      * @return mixed
      */
-    public function getMeetings()
+    public function getMeeting()
     {
-        return $this->meetings;
+        return $this->meeting;
+    }
+
+    /**
+     * @param mixed $meeting
+     */
+    public function setMeeting($meeting) {
+        $this->meeting = $meeting;
     }
 
     public function addModerator(User $user)
@@ -107,12 +114,29 @@ class Room implements \JsonSerializable
         $this->moderators[] = $user;
     }
 
+    public function removeModerator(User $user)
+    {
+        if ($this->moderators->contains($user)) {
+            $user->removeModeratingRoom($this);
+            $this->moderators->removeElement($user);
+        }
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getModerators() {
+        return $this->moderators;
+    }
+
     public function jsonSerialize()
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'schedule' => $this->getSchedules()->toArray()
+            'schedule' => $this->getSchedules()->toArray(),
+            'moderators' => (new FilteredObjectsArray($this->moderators->toArray()))->with(['id', 'name', 'surname', 'patronymic'])->get()
         ];
     }
 
