@@ -40,7 +40,11 @@ class FilteredObjectsArray {
             }
             $result = [];
             foreach ($this->with as $key) {
-                $result[$key] = $item->$key;
+                if (method_exists($item, $key)) {
+                    $result[$key] = $item->$key();
+                } else if (property_exists($item, $key)) {
+                    $result[$key] = $item->$key;
+                }
             }
             return $result;
         }

@@ -24,7 +24,7 @@ class Meeting
 
     /**
      * @var Room
-     * @ORM\OneToOne(targetEntity="Room", inversedBy="meetings")
+     * @ORM\OneToOne(targetEntity="Room", inversedBy="meeting")
      * @ORM\JoinColumn(onDelete="cascade")
      */
     protected $room;
@@ -53,6 +53,14 @@ class Meeting
      */
     public $duration;
 
+
+    /**
+     * Get the value of id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return Room
@@ -182,4 +190,5 @@ class Meeting
 
         return $this;
     }
+
 }
