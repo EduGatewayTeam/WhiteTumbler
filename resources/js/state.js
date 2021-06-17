@@ -3,9 +3,9 @@ import { createStore } from "redux";
 let defaultState = {
     activeRoom: null,
     rooms: [],
-    shedule: [],
+    schedule: [],
     meetingsRecords: {
-        "25ce0d17-d99a-48cf-8569-3e3c0e0d3777" : 
+        "2d89adf7-1e9f-4ddc-a84f-d800d0b122a7" : 
         [
             {
                 "name": "Экзамен по WEB",
@@ -44,11 +44,18 @@ function reducer(state = defaultState, action) {
                 activeRoom: state.rooms[action.data.selectedRoomIndex]
             };
         case "SET_ROOMS":
+            
             // устанавливаем комнаты в общий стейт
             return {
                 ...state,
-                rooms: action.data.rooms
-            }
+                rooms: [...action.data.rooms]
+            };
+        case "SET_ROOM_SCHEDULE":
+            console.log(action)
+            return {
+                ...state,
+                schedule: [...action.data.schedule],
+            };
         default:
             return state;
     }

@@ -12,21 +12,13 @@ export default {
         return {
             sessions: null,
             isVisible: false,
-            daysArray: [
-                {"dayname": "monday", "number": 1, },
-                {"dayname": "tuesday", "number": 2},
-                {"dayname": "wednesday", "number": 3},
-                {"dayname": "thursday", "number": 4},
-                {"dayname": "friday", "number": 5},
-                {"dayname": "saturday", "number": 6},
-            ],
-            shedule: [
-                {"even": null, "odd": null},
-                {"even": null, "odd": null},
-                {"even": null, "odd": null},
-                {"even": null, "odd": null},
-                {"even": null, "odd": null},
-                {"even": null, "odd": null},
+            schedule: [
+                {"dayname": "monday", "even": null, "odd": null},
+                {"dayname": "tuesday", "even": null, "odd": null},
+                {"dayname": "wednesday", "even": null, "odd": null},
+                {"dayname": "thursday", "even": null, "odd": null},
+                {"dayname": "friday", "even": null, "odd": null},
+                {"dayname": "saturday", "even": null, "odd": null},
             ]
         };
     },
@@ -57,15 +49,19 @@ export default {
                 createMeetingForm.className = "mt-2 d-flex flex-column justify-content-around"
             }
 
-            if(this.isVisible) {
-                state.getState().shedule = [];
-                this.shedule.forEach( (day) => { day.even = null; day.odd = null; } );
+            if (this.isVisible) {
+                state.getState().schedule = [];
+                this.schedule.forEach( (day) => { day.even = null; day.odd = null; } );
             }
             console.log(state.getState());
             this.isVisible = !this.isVisible;
         },
-        setShedule(){
-            state.getState().shedule = [...this.shedule];
+        setSchedule(){
+            console.log(this.schedule);
+            state.dispatch({
+                type: "SET_ROOM_SCHEDULE",
+                data: { schedule: this.schedule }
+            });
         }
     }
 };
@@ -74,11 +70,11 @@ export default {
 <template>
     <div>
         <div
-            v-b-popover.hover.top="'Shedule meetings'"
             @click="changeVisibility"
             class="m-2"
         >
             <svg
+                v-b-popover.hover.left="'Schedule meetings'"
                 class="dateTimeIcon"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 1024 1024"
@@ -96,7 +92,7 @@ export default {
                 
                 <span class="m-1">ODD WEEK: </span>
                 
-                <div v-for="(day) in daysArray" :key="`odd-${day.dayname}`">
+                <div v-for="(day) in schedule" :key="`odd-${day.dayname}`">
                     <input type="checkbox" @click="changeTimePickerVisibility(`odd-time-range-${day.dayname}`)" :id="`odd-weekday-${day.dayname.slice(0, 3)}`" class="weekday" />
                     <label :for="`odd-weekday-${day.dayname.slice(0, 3)}`">{{ day.dayname[0].toUpperCase() }}</label>
                 </div>
@@ -104,9 +100,9 @@ export default {
             </div>
 
             <div class="d-flex weekDays-selector">
-                <span class="m-1">EVEN WEEK: </span>
+                <span class="m-2">EVEN WEEK: </span>
                 
-                <div v-for="(day) in daysArray" :key="`even-${day.dayname}`">
+                <div v-for="(day) in schedule" :key="`even-${day.dayname}`">
                     <input type="checkbox" @click="changeTimePickerVisibility(`even-time-range-${day.dayname}`)" :id="`even-weekday-${day.dayname.slice(0, 3)}`" class="weekday" />
                     <label :for="`even-weekday-${day.dayname.slice(0, 3)}`">{{ day.dayname[0].toUpperCase() }}</label>
                 </div>
@@ -115,18 +111,19 @@ export default {
 
         </div>
 
+
         <div v-if="isVisible" class="col-md-12 form-group p-1">
             <div 
                 class="d-flex" 
                 :id="`even-time-range-${day.dayname}`" 
-                v-for="(day) in daysArray" 
+                v-for="(day) in schedule" 
                 :key="`even-time-range-${day.dayname}`"
                 style="display: none !important;"
             >
                 <label class="m-1 p-1">Even {{day.dayname}}: </label>
                 <date-picker
                     v-if="isVisible"
-                    @input="setShedule"
+                    @input="setSchedule"
                     v-model="day.even"
                     type="time"
                     range
@@ -136,7 +133,7 @@ export default {
             <div 
                 class="d-flex" 
                 :id="`odd-time-range-${day.dayname}`" 
-                v-for="(day) in daysArray" 
+                v-for="(day) in schedule" 
                 :key="`odd-time-range-${day.dayname}`"
                 style="display: none !important;"
             >
@@ -144,6 +141,7 @@ export default {
                 <date-picker
                     v-if="isVisible"
                     v-model="day.odd"
+                    @input="setSchedule"
                     type="time"
                     range
                     placeholder="Select time when room is active"
@@ -152,6 +150,7 @@ export default {
         </div>
 
     </div>
+
 </template>
 
 <style>

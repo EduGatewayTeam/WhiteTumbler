@@ -38,7 +38,8 @@ export default {
             meetingName: "",
             updateRoomProcessing: false,
             dateTimeRange: null,
-            currTz: currTz
+            currTz: currTz,
+            weekDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
         };
     },
     mounted() {
@@ -90,9 +91,6 @@ export default {
             this.activeRoom = this.rooms[roomIndex];
             this.activeRoomIndex = roomIndex;
             $("#roomPage").modal("show");
-            this.meetings = this.checkMeetingActivation(
-                this.rooms[roomIndex].meetings
-            );
         },
         openRoomSettings(roomIndex) {
             $("#room-settings-modal").modal("show");
@@ -132,115 +130,73 @@ export default {
         getDataTimeRange(dateTimeRange) {
             this.dateTimeRange = dateTimeRange;
         },
-        addMeeting() {
-            if (!this.meetingName) {
-                return;
-            }
-
-            debugger
-
-            let sessions = [];
-            let shedule = state.getState().shedule;
-
-            if (shedule) {
-                
-                shedule.forEach( (day, index) => {
-                    
-                    day.even ?
-                        sessions.push({
-                            day_type: "even",
-                            week_day: index + 1,
-                            time_start: day.even[0],
-                            time_end: day.even[1]
-                        })
-                    :
-                        null;
-
-                    day.odd ?
-                        sessions.push({
-                            day_type: "odd",
-                            week_day: index + 1,
-                            time_start: day.odd[0],
-                            time_end: day.odd[1]
-                        })
-                    :
-                        null;
-                });
-            }
-
+        async updateSchedule() {
+            let schedule = [];
             this.newMeetingProcessing = true;
-            let activationDate = this.dateTimeRange
-                ? this.dateTimeRange[0]
-                : null;
-            let deactivationDate = this.dateTimeRange
-                ? this.dateTimeRange[1]
-                : null;
-            api.post("/meetings", {
-                roomId: this.activeRoom.id,
-                name: this.meetingName,
-                sessions,
-                activationDate,
-                deactivationDate
-            })
-                .then(response => {
-                    if (response.data.errors) {
-                        //this.errors = response.data.errors
-                    } else {
-                        this.activeRoom.meetings.push(response.data);
-                        this.meetings = this.checkMeetingActivation(
-                            this.activeRoom.meetings
-                        );
-                        Vue.set(
-                            this.rooms,
-                            this.activeRoomIndex,
-                            this.activeRoom
-                        );
-                    }
-                })
-                .catch(error => {
-                    this.errors = {
-                        request: error
-                    };
-                })
-                .finally(() => {
-                    this.newMeetingProcessing = false;
-                    this.meetingName = "";
-                });
-        },
-        checkMeetingActivation(meetings) {
-            meetings.forEach(function(meeting, index) {
-                let now = new Date(),
-                    meetingActivateDate = new Date(meeting.activateAt.date);
-                if (meeting.deactivateAt !== null) {
-                    let meetingDeactivateDate = new Date(
-                        meeting.deactivateAt.date
-                    );
-                    if (now.getTime() >= meetingActivateDate.getTime()) {
-                        if (now.getTime() < meetingDeactivateDate.getTime()) {
-                            meeting.isActive = true;
-                        } else {
-                            meeting.isActive = -1;
-                        }
-                    } else {
-                        meeting.isActive = false;
-                    }
-                } else {
-                    meeting.isActive =
-                        now.getTime() >= meetingActivateDate.getTime();
-                }
+
+            await state.getState().schedule.forEach( (day, index) => {
+                day.even
+                    ? schedule.push({
+                            day_type: "even",
+                            week_day: index,
+                            time_start: this.dateLocalization(
+                              day.even[0],
+                              "hh:mm:ss"
+                            ),
+                            time_end: this.dateLocalization(
+                              day.even[1],
+                              "hh:mm:ss"
+                            )
+                        })
+                    : null;
+
+                day.odd
+                    ? schedule.push({
+                            day_type: "odd",
+                            week_day: index,
+                            time_start: this.dateLocalization(
+                              day.odd[0],
+                              "hh:mm:ss"
+                            ),
+                            time_end: this.dateLocalization(
+                              day.odd[1],
+                              "hh:mm:ss"
+                            ) 
+                        })
+                    : null;
             });
 
-            meetings.sort(function(a, b) {
-                return (
-                    new Date(a.activateAt.date) - new Date(b.activateAt.date)
-                );
-            });
+            console.log("schedule: ", schedule);
 
-            return meetings;
+               
+
+            let response = await api.patch(`/room/${this.activeRoom.id}`, {schedule});
+            if (response.data.errors) {
+                this.$toast.error(`The schedule was NOT updated.`);
+            }
+            else this.$toast.success(`The room schedule was updated.`);
+
+            this.newMeetingProcessing = false;    
+            $("#room-settings-modal").modal("hide");
+
+            // @todo обновить state
+
         },
         dateLocalization(meeting_date, output_format = "DD.MM.YY HH:mm") {
             let date = moment(meeting_date).format(output_format);
             return date;
+        },
+        isMeetingActive(time_start, time_end) {
+            let now = new Date();
+            let currentDate = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+
+            if (currentDate > time_start && currentDate < time_end)
+                return 1; // meeting is active
+            return 0;
+        },
+        getWeekDay(weekDay){
+            let weekDayIndex = parseInt(weekDay);
+            return this.weekDays[weekDayIndex];
         }
     }
 };

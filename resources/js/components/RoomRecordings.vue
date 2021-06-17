@@ -26,7 +26,6 @@
 
 <script>
 import state from "../state";
-import Vue from 'vue';
 
 let roomRecordings = {
     data() {
@@ -44,11 +43,21 @@ let roomRecordings = {
         displayRecords() {
             let currentState = state.getState();
             let tbody = document.getElementById("recordsTable");
-
+            let emptyTable = 
+                    `<tr>
+                        <td
+                            colspan="7"
+                            @click="showThis"
+                            class="text-center fs-5 text-gray-500"
+                        >
+                            You currently have no recordings.
+                        </td>
+                    </tr>`;
             if (currentState.activeRoom) {
                 //debugger;
-                let records = currentState.meetingsRecords[currentState.activeRoom.id];
+                let records = currentState.meetingsRecords[currentState.activeRoom.id] ? currentState.meetingsRecords[currentState.activeRoom.id] : null;
                 let table = '';
+                records ?
                 records.forEach(record => {
                     table += `
                         <tr>
@@ -65,21 +74,10 @@ let roomRecordings = {
                             <td>${ record.usersCount }</td>
                             <td><a class="btn btn-sm btn-primary" target="_blank" href="${ record.link }">Просмотреть</a></td>
                         </tr>`;
-                });
-                tbody.innerHTML = table;
-            }
-            else {
-                let emptyTable = 
-                    `<tr>
-                        <td
-                            colspan="7"
-                            @click="showThis"
-                            class="text-center fs-5 text-gray-500"
-                        >
-                            You currently have no recordings.
-                        </td>
-                    </tr>`;
-                tbody.innerHTML = emptyTable;
+                })
+                :
+                null;
+                tbody.innerHTML = table ? table : emptyTable;
             }
         },
         showThis() {
