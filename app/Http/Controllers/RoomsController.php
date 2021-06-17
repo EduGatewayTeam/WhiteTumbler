@@ -57,6 +57,14 @@ class RoomsController extends Controller
         return new JsonResponse($room);
     }
 
+    /**
+     * @Get("/rooms", middleware="web")
+     * @Middleware("auth")
+     */
+    public function getRooms() {
+        return new JsonResponse(['rooms' => Auth::user()->getRooms()->toArray()]);
+    }
+
 
     /**
      * @param $roomId
@@ -108,20 +116,24 @@ class RoomsController extends Controller
             abort(404);
         }
 
+        /**
+         * @var User
+         */
+        $user = Auth::user();
+
         if ($room->getMeeting() == null) {
-            // manual meeting, immediatly create in bbb
-            $this->meetingsService->createMeeting($room);
+            if ($room->getCreator()->getId() == $user->getId()) {
+                // manual meeting, immediatly create in bbb
+                $this->meetingsService->createMeeting($room);
+            } else {
+                return view('waitMeeting', ['roomName' => $room->getName()]);
+            }
         }
 
         /**
          * @var Meeting
          */
         $meeting = $room->getMeeting();
-
-        /**
-         * @var User
-         */
-        $user = Auth::user();
 
         // if manual meeting is not running - remove, recreate?
         $bbb                 = new BigBlueButton();
