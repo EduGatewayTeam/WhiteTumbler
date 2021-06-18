@@ -148,7 +148,7 @@ export default {
                 if (day.even) {
 
                     schedule.forEach( (item, index, object) => {
-                        if (item?.week_day == dayIndex) {
+                        if (item?.week_day == dayIndex && item?.day_type == 'even') {
                             object.splice(index, 1);
                         }
                     });
@@ -167,7 +167,7 @@ export default {
                 if (day.odd) {
 
                     schedule.forEach( (item, index, object) => {
-                        if (item?.week_day == dayIndex) {    
+                        if (item?.week_day == dayIndex && item?.day_type == 'odd') {    
                             object.splice(index, 1);
                         } 
                     });
