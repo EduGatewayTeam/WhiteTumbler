@@ -36,26 +36,35 @@ let defaultState = {
 };
 
 function reducer(state = defaultState, action) {
+    console.log(action);
     switch (action.type) {
         case "SET_ACTIVE_ROOM":
             // создается асинхронный запрос для получения всех записей и они добавляются в state
             return {
                 ...state,
-                activeRoom: state.rooms[action.data.selectedRoomIndex]
+                activeRoom: { ...state.rooms[action.data.selectedRoomIndex]}
             };
         case "SET_ROOMS":
-            
             // устанавливаем комнаты в общий стейт
             return {
                 ...state,
                 rooms: [...action.data.rooms]
             };
         case "SET_ROOM_SCHEDULE":
-            console.log(action)
             return {
                 ...state,
                 schedule: [...action.data.schedule],
             };
+        case 'SET_ACTIVE_ROOM_SCHEDULE':
+            return {
+                ...state,
+                activeRoom: { ...action.data.activeRoom },
+            };
+        case 'SET_DEFAULT_SCHEDULE':
+            return{
+                ...state,
+                schedule: action.data.schedule
+            }
         default:
             return state;
     }

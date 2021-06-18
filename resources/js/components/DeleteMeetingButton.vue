@@ -34,10 +34,13 @@
 <script>
 import { VBPopover } from "bootstrap-vue";
 import api from "../api";
+import state from "../state";
 
 export default {
     props: {
-        meetingId: String
+        meetingWeekDay: String,
+        meetingDayType: String,
+        meetingWeekDayName: String,
     },
     directives: {
         "b-popover": VBPopover
@@ -48,29 +51,41 @@ export default {
         };
     },
     methods: {
-        deleteMeeting() {
+        async deleteMeeting() {
             if (this.meetingDeleteProcessing) {
                 return;
             }
 
+            let currentState = state.getState();
+            let schedule = [...currentState.activeRoom.schedule];
+
             this.meetingDeleteProcessing = true;
-            api.delete(`/meetings/${this.meetingId}`)
-                .then(response => {
-                    if (response.data.errors) {
-                        this.$toast.error(
-                            `The meeting was not deleted: ${response.data.errors}`
-                        );
-                    } else {
-                        document.getElementById(`${this.meetingId}`).remove();
-                        this.$toast.success(`The meeting was deleted.`);
-                    }
-                })
-                .catch(error => {
-                    this.$toast.error(`The meeting was not deleted: ${error}`);
-                })
-                .finally(() => {
-                    this.meetingDeleteProcessing = false;
-                });
+            
+            await schedule.forEach( (item, index, object) => {
+                if (item?.week_day == this.meetingWeekDay && item?.day_type == this.meetingDayType) {
+                    object.splice(index, 1);
+                }
+            });
+
+            console.log('final schedule: ', schedule);
+
+            let response = await api.patch(`/room/${currentState.activeRoom.id}`, {
+                schedule
+            });
+
+            if (response.data.errors) {
+                this.$toast.error(`The meetins was NOT updated.`);
+            } else { 
+                let meetingId = `#${this.meetingDayType}_${this.meetingWeekDayName}`;
+                console.log('meet_id: ', meetingId);
+                this.$toast.success(`The room schedule was updated.`);
+                $(meetingId).remove();
+
+                let activeRoom = { ...currentState.activeRoom, 'schedule':  schedule};
+                state.dispatch( { 'type': 'SET_ACTIVE_ROOM_SCHEDULE', 'data': { activeRoom } } );
+            }
+            
+            this.meetingDeleteProcessing = false;
         }
     }
 };

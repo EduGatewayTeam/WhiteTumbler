@@ -12,15 +12,14 @@
               
                 <div v-for="(item, index) in activeRoom.schedule">
                     
-                    <div class="p-2 d-flex align-items-center justify-content-between">
+                    <div :id="`${item.day_type}_${getWeekDay(item.week_day)}`" class="p-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <div v-if="isMeetingActive(item.time_start, item.time_end) > 0" class="spinner-grow spinner-grow-sm text-danger"
                                 role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
-                            <button v-else class="congig-btn btn ml-3 p-1 rounded-circle lh-1" disabled>
-                                <i class="fa fa-podcast" style="color: #1e40af !important"></i>
-                            </button>
+    
+                            <i v-else class="fa fa-podcast" style="color: #2563eb !important"></i>
                             <span class="ms-3" style="font-weight: bold !important;">@{{ item.day_type + ' ' + getWeekDay(item.week_day) }}</span>
                             <span class="ms-3">@{{ item . time_start }}</span>
                             <span>&#160—&#160</span>
@@ -28,10 +27,8 @@
                         </div>
 
                         <div class="d-flex justify-content-end">
-                           
-                            <copy-link-to-clipboard :meetingLink='`/schedule/${item.id}/join`'></copy-link-to-clipboard>
 
-                            <delete-meeting :meetingId='`${item.id}`'></delete-meeting>
+                            <delete-meeting :meetingWeekDay='`${item.week_day}`' :meetingDayType='`${item.day_type}`' :meetingWeekDayName='`${getWeekDay(item.week_day)}`'></delete-meeting>
                             
                             <a :href="`/meeting/${item.id}/join`"
                                 class="btn p-2 lh-1 rounded-circle bg-blue-50 bg-blue-400-hover"
@@ -62,17 +59,9 @@
                 </div>
 
                 <div id="create-meeting-form" class="mt-2 d-flex align-items-center">
-                    
-                    {{-- <div class="me-2">
-                        <input :disabled="newMeetingProcessing" v-model="meetingName"
-                            :class="{ 'is-invalid': errors.name }" type="text" class="form-control"
-                            id="inputRoomCreateName" placeholder="{{ __('rooms.meeting-name') }}" required>
-                    </div> --}}
-
-
+                
                     <schedule-meetings></schedule-meetings>
-                    {{-- <date-time-picker v-on:sendDataTimeRange="getDataTimeRange"></date-time-picker> --}}
-
+                
                     <div>
                         <button @click="updateSchedule" type="button"
                             class="btn p-2 m-2 border-0 bg-blue-500 bg-blue-600-hover text-white lh-1">
@@ -80,11 +69,6 @@
                                 <span class="visually-hidden">Loading...</span>
                             </span>
                             Update schedule
-                            {{-- <svg v-else xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
-                                class="bi bi-plus" viewBox="0 0 16 16">
-                                <path
-                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                            </svg> --}}
                         </button>
                     </div>
                 </div>

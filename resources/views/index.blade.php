@@ -45,7 +45,9 @@
                                 <p class="py-2 mb-0">Последняя сессия:</p><p class="mb-0">Ноябрь 28, 2020</p>
                                 <hr>
                                 <div class="d-flex align-items-center mt-4 text-gray-700">
-                                    <h2 class="px-2 fs-6 mb-0">{{ Auth::user()->getName() }}</h2>
+                                    <h2 class="fs-6 mb-0">{{ Auth::user()->getName() }}</h2>
+
+                                    <copy-link-to-clipboard :meetingLink='`/room/${room.id}/join`'></copy-link-to-clipboard>
 
                                     <button @click="openRoomSettings(index)" class="congig-btn btn ml-3 p-1 rounded-circle lh-1">
                                         <i class="fa fa-user-plus"></i>

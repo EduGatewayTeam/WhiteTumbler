@@ -39,7 +39,15 @@ export default {
             updateRoomProcessing: false,
             dateTimeRange: null,
             currTz: currTz,
-            weekDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+            weekDays: [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+            ]
         };
     },
     mounted() {
@@ -131,56 +139,71 @@ export default {
             this.dateTimeRange = dateTimeRange;
         },
         async updateSchedule() {
-            let schedule = [];
+            let currentState = state.getState();
+            let schedule = [...currentState.activeRoom.schedule];
             this.newMeetingProcessing = true;
 
-            await state.getState().schedule.forEach( (day, index) => {
-                day.even
-                    ? schedule.push({
-                            day_type: "even",
-                            week_day: index,
-                            time_start: this.dateLocalization(
-                              day.even[0],
-                              "hh:mm:ss"
-                            ),
-                            time_end: this.dateLocalization(
-                              day.even[1],
-                              "hh:mm:ss"
-                            )
-                        })
-                    : null;
+            await currentState.schedule.forEach( (day, dayIndex) => {
 
-                day.odd
-                    ? schedule.push({
-                            day_type: "odd",
-                            week_day: index,
-                            time_start: this.dateLocalization(
-                              day.odd[0],
-                              "hh:mm:ss"
-                            ),
-                            time_end: this.dateLocalization(
-                              day.odd[1],
-                              "hh:mm:ss"
-                            ) 
-                        })
-                    : null;
+                if (day.even) {
+
+                    schedule.forEach( (item, index, object) => {
+                        if (item?.week_day == dayIndex) {
+                            object.splice(index, 1);
+                        }
+                    });
+
+                    schedule.push({
+                        day_type: "even",
+                        week_day: dayIndex,
+                        time_start: this.dateLocalization(
+                            day.even[0],
+                            "hh:mm:ss"
+                        ),
+                        time_end: this.dateLocalization(day.even[1], "hh:mm:ss")
+                    });
+                }
+
+                if (day.odd) {
+
+                    schedule.forEach( (item, index, object) => {
+                        if (item?.week_day == dayIndex) {    
+                            object.splice(index, 1);
+                        } 
+                    });
+
+                    schedule.push({
+                        day_type: "odd",
+                        week_day: dayIndex,
+                        time_start: this.dateLocalization(
+                            day.odd[0],
+                            "hh:mm:ss"
+                        ),
+                        time_end: this.dateLocalization(day.odd[1], "hh:mm:ss")
+                    });
+                }
             });
 
-            console.log("schedule: ", schedule);
+            console.log('final schedule: ', schedule);
 
-               
+            let response = await api.patch(`/room/${this.activeRoom.id}`, {
+                schedule
+            });
 
-            let response = await api.patch(`/room/${this.activeRoom.id}`, {schedule});
             if (response.data.errors) {
                 this.$toast.error(`The schedule was NOT updated.`);
-            }
-            else this.$toast.success(`The room schedule was updated.`);
+            } else this.$toast.success(`The room schedule was updated.`);
+            
+            let activeRoom = { ...this.activeRoom, 'schedule':  schedule};
+            state.dispatch( { 'type': 'SET_ACTIVE_ROOM_SCHEDULE', 'data': { activeRoom } } );
+            
+            currentState = state.getState();
 
-            this.newMeetingProcessing = false;    
-            $("#room-settings-modal").modal("hide");
-
-            // @todo обновить state
-
+            this.activeRoom = currentState.activeRoom;
+            console.log('new active room: ', currentState.activeRoom)
+            this.rooms = currentState.rooms;
+            this.newMeetingProcessing = false;
+            $("#roomPage").modal("hide");
         },
         dateLocalization(meeting_date, output_format = "DD.MM.YY HH:mm") {
             let date = moment(meeting_date).format(output_format);
@@ -190,11 +213,9 @@ export default {
             let now = new Date();
             let currentDate = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 
-            if (currentDate > time_start && currentDate < time_end)
-                return 1; // meeting is active
-            return 0;
+            return currentDate > time_start && currentDate < time_end ? 1 : 0;
         },
-        getWeekDay(weekDay){
+        getWeekDay(weekDay) {
             let weekDayIndex = parseInt(weekDay);
             return this.weekDays[weekDayIndex];
         }

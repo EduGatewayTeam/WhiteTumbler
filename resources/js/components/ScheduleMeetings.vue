@@ -5,6 +5,14 @@ import { VBPopover } from "bootstrap-vue";
 import "vue2-datepicker/index.css";
 
 import state from "../state";
+let defaultSchedule = [
+    { dayname: "monday", even: null, odd: null },
+    { dayname: "tuesday", even: null, odd: null },
+    { dayname: "wednesday", even: null, odd: null },
+    { dayname: "thursday", even: null, odd: null },
+    { dayname: "friday", even: null, odd: null },
+    { dayname: "saturday", even: null, odd: null }
+];
 
 export default {
     components: { DatePicker },
@@ -12,51 +20,47 @@ export default {
         return {
             sessions: null,
             isVisible: false,
-            schedule: [
-                {"dayname": "monday", "even": null, "odd": null},
-                {"dayname": "tuesday", "even": null, "odd": null},
-                {"dayname": "wednesday", "even": null, "odd": null},
-                {"dayname": "thursday", "even": null, "odd": null},
-                {"dayname": "friday", "even": null, "odd": null},
-                {"dayname": "saturday", "even": null, "odd": null},
-            ]
+            schedule: defaultSchedule
         };
     },
     directives: {
         "b-popover": VBPopover
     },
     methods: {
-        changeTimePickerVisibility(id){
+        changeTimePickerVisibility(id) {
             let timeRangePicker = document.getElementById(id);
-            if(timeRangePicker.style.display !== 'none') {
-                timeRangePicker.setAttribute('style', 'display:none !important');
-            }
-            else {
-                timeRangePicker.style.display = 'flex';
+            if (timeRangePicker.style.display !== "none") {
+                timeRangePicker.setAttribute(
+                    "style",
+                    "display:none !important"
+                );
+            } else {
+                timeRangePicker.style.display = "flex";
             }
         },
         sendData: function() {
             this.$emit("sendDataTimeRange", this.dataTimeRange);
         },
         changeVisibility() {
-            let createMeetingForm = document.getElementById("create-meeting-form");
-            if (this.isVisible){
-                // если было раскрыто
-                createMeetingForm.className = "mt-2 d-flex align-items-center"
-            }
-            else {
-                // если было свернуто
-                createMeetingForm.className = "mt-2 d-flex flex-column justify-content-around"
-            }
+            let createMeetingForm = document.getElementById(
+                "create-meeting-form"
+            );
 
             if (this.isVisible) {
-                state.getState().schedule = [];
-                this.schedule.forEach( (day) => { day.even = null; day.odd = null; } );
+                // если было раскрыто
+                createMeetingForm.className = "mt-2 d-flex align-items-center";
+                this.schedule = defaultSchedule;
+            } else {
+                // если было свернуто
+                createMeetingForm.className =
+                    "mt-2 d-flex flex-column justify-content-around";
+                //state.dispatch({'type': "SET_DEFAULT_SCHEDULE", 'data': { 'schedule': defaultSchedule } })
+                this.schedule = defaultSchedule;
             }
-            console.log(state.getState());
+
             this.isVisible = !this.isVisible;
         },
-        setSchedule(){
+        setSchedule() {
             console.log(this.schedule);
             state.dispatch({
                 type: "SET_ROOM_SCHEDULE",
@@ -69,10 +73,7 @@ export default {
 
 <template>
     <div>
-        <div
-            @click="changeVisibility"
-            class="m-2"
-        >
+        <div @click="changeVisibility" class="m-2">
             <svg
                 v-b-popover.hover.left="'Schedule meetings'"
                 class="dateTimeIcon"
@@ -89,38 +90,55 @@ export default {
 
         <div v-if="isVisible" class="d-flex flex-column justify-content-around">
             <div class="d-flex weekDays-selector m-1">
-                
                 <span class="m-1">ODD WEEK: </span>
-                
-                <div v-for="(day) in schedule" :key="`odd-${day.dayname}`">
-                    <input type="checkbox" @click="changeTimePickerVisibility(`odd-time-range-${day.dayname}`)" :id="`odd-weekday-${day.dayname.slice(0, 3)}`" class="weekday" />
-                    <label :for="`odd-weekday-${day.dayname.slice(0, 3)}`">{{ day.dayname[0].toUpperCase() }}</label>
-                </div>
 
+                <div v-for="day in schedule" :key="`odd-${day.dayname}`">
+                    <input
+                        type="checkbox"
+                        @click="
+                            changeTimePickerVisibility(
+                                `odd-time-range-${day.dayname}`
+                            )
+                        "
+                        :id="`odd-weekday-${day.dayname.slice(0, 3)}`"
+                        class="weekday"
+                    />
+                    <label :for="`odd-weekday-${day.dayname.slice(0, 3)}`">{{
+                        day.dayname[0].toUpperCase()
+                    }}</label>
+                </div>
             </div>
 
             <div class="d-flex weekDays-selector">
                 <span class="m-2">EVEN WEEK: </span>
-                
-                <div v-for="(day) in schedule" :key="`even-${day.dayname}`">
-                    <input type="checkbox" @click="changeTimePickerVisibility(`even-time-range-${day.dayname}`)" :id="`even-weekday-${day.dayname.slice(0, 3)}`" class="weekday" />
-                    <label :for="`even-weekday-${day.dayname.slice(0, 3)}`">{{ day.dayname[0].toUpperCase() }}</label>
+
+                <div v-for="day in schedule" :key="`even-${day.dayname}`">
+                    <input
+                        type="checkbox"
+                        @click="
+                            changeTimePickerVisibility(
+                                `even-time-range-${day.dayname}`
+                            )
+                        "
+                        :id="`even-weekday-${day.dayname.slice(0, 3)}`"
+                        class="weekday"
+                    />
+                    <label :for="`even-weekday-${day.dayname.slice(0, 3)}`">{{
+                        day.dayname[0].toUpperCase()
+                    }}</label>
                 </div>
-
             </div>
-
         </div>
 
-
         <div v-if="isVisible" class="col-md-12 form-group p-1">
-            <div 
-                class="d-flex" 
-                :id="`even-time-range-${day.dayname}`" 
-                v-for="(day) in schedule" 
+            <div
+                class="d-flex"
+                :id="`even-time-range-${day.dayname}`"
+                v-for="day in schedule"
                 :key="`even-time-range-${day.dayname}`"
                 style="display: none !important;"
             >
-                <label class="m-1 p-1">Even {{day.dayname}}: </label>
+                <label class="m-1 p-1">Even {{ day.dayname }}: </label>
                 <date-picker
                     v-if="isVisible"
                     @input="setSchedule"
@@ -130,14 +148,14 @@ export default {
                     placeholder="Select time when room is active"
                 ></date-picker>
             </div>
-            <div 
-                class="d-flex" 
-                :id="`odd-time-range-${day.dayname}`" 
-                v-for="(day) in schedule" 
+            <div
+                class="d-flex"
+                :id="`odd-time-range-${day.dayname}`"
+                v-for="day in schedule"
                 :key="`odd-time-range-${day.dayname}`"
                 style="display: none !important;"
             >
-                <label class="m-1 p-1">Odd {{day.dayname}}: </label>
+                <label class="m-1 p-1">Odd {{ day.dayname }}: </label>
                 <date-picker
                     v-if="isVisible"
                     v-model="day.odd"
@@ -148,9 +166,7 @@ export default {
                 ></date-picker>
             </div>
         </div>
-
     </div>
-
 </template>
 
 <style>
