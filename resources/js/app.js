@@ -26,8 +26,9 @@ Vue.component("copy-link-to-clipboard", CopyToClipboard);
 Vue.component("delete-meeting", DeleteMeting);
 Vue.component("room-recordings", RoomRecordings);
 Vue.component("date-time-picker", DateTimePicker);
-Vue.component("schedule-meetings", ScheduleMeetings);
 Vue.component("w-rooms", Rooms);
+Vue.component("schedule-meetings", ScheduleMeetings);
+
 
 VueClipboard.config.autoSetContainer = true;
 

@@ -10,6 +10,8 @@ Rooms
 
             @include('modals.confirm-delete-modal')
 
+            @include('modals.set-moderators-room-modal')
+
             @include('modals.room-settings-modal')
 
             @include('modals.add-room-modal')
@@ -53,7 +55,7 @@ Rooms
 
                                     <copy-link-to-clipboard :meetingLink='`/room/${room.id}/join`'></copy-link-to-clipboard>
 
-                                    <button @click="openRoomSettings(index)" class="congig-btn btn ml-3 p-1 rounded-circle lh-1">
+                                    <button @click="openModersModal(index)" class="congig-btn btn ml-3 p-1 rounded-circle lh-1">
                                         <i class="fa fa-user-plus"></i>
                                     </button>
 

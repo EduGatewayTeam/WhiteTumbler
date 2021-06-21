@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "@alfsnd/vue-bootstrap-select": "^0.4.4",
         "@fortawesome/fontawesome-free": "^5.15.2",
         "@popperjs/core": "^2.6.0",
         "bootstrap": "^5.0.0-beta1",

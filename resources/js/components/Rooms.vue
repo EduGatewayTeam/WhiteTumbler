@@ -35,6 +35,7 @@ const Rooms = {
             activeRoom: null,
             activeRoomIndex: null,
             meetingName: "",
+            selectedValue: null,
             updateRoomProcessing: false,
             dateTimeRange: null,
             currTz: currTz,
@@ -46,7 +47,7 @@ const Rooms = {
                 "friday",
                 "saturday",
                 "sunday"
-            ],
+            ]
         };
     },
     mounted() {
@@ -61,6 +62,52 @@ const Rooms = {
             state.dispatch({
                 type: "SET_ACTIVE_ROOM",
                 data: { selectedRoomIndex: index }
+            });
+        },
+        openModersModal(roomIndex) {
+            this.activeRoom = this.rooms[roomIndex];
+            this.activeRoomIndex = roomIndex;
+            $("#set-moderators-modal").modal("show");
+        },
+        async addNewModers() {
+            this.updateRoomProcessing = true;
+
+            let userId = "";
+            let optionList = document.getElementById("usersList").childNodes;
+            let checkedValue = document.getElementById("new_moder").value;
+            console.log('checkedValue: ', checkedValue);
+            await optionList.forEach(node => {
+                console.log('node.innerText: ', node.innerText);
+                node.innerText == checkedValue ? (userId = node.id) : "";
+            });
+            console.log("userId: ", userId);
+            api.post(`/room/${this.activeRoom.id}/add_moderator`, { 'moderator_id': userId }
+            ).then(response => {
+                if (response.data.errors) {
+                    this.errors = response.data.errors;
+                } else {
+                    this.$toast.success(`Moder was aded.`);
+                }
+            });
+            this.updateRoomProcessing = false;
+        },
+        searchUsers(e) {
+            let userName = e.target.value;
+            console.log("Search user name: ", userName);
+            $("#usersList").html(`<option>Loading...</option>`);
+            api.post("/search", {
+                query: userName
+            }).then(response => {
+                if (response.data.errors) {
+                    this.errors = response.data.errors;
+                } else {
+                    console.log("search responce: ", response.data);
+                    let optionsValues = response.data.map(user => {
+                        return `<option id="${user.id}">${user.surname} ${user.name} ${user.patronymic}</option>`;
+                    });
+                    let optionsString = optionsValues.join();
+                    $("#usersList").html(optionsString);
+                }
             });
         },
         createRoom() {
@@ -151,13 +198,12 @@ const Rooms = {
             return this.weekDays[weekDayIndex];
         },
         updateRoom() {
-
             let currentState = state.getState();
             let updatedRooms = currentState.rooms;
-                        
+
             this.rooms = updatedRooms ? updatedRooms : null;
             this.activeRoom = updatedRooms[this.activeRoomIndex];
-        },
+        }
     }
 };
 
