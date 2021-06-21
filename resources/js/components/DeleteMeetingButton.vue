@@ -36,7 +36,7 @@ import { VBPopover } from "bootstrap-vue";
 import api from "../api";
 import state from "../state";
 
-export default {
+export default {    
     props: {
         meetingWeekDay: String,
         meetingDayType: String,

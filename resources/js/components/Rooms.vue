@@ -187,11 +187,16 @@ const Rooms = {
             let date = moment(meeting_date).format(output_format);
             return date;
         },
-        isMeetingActive(time_start, time_end) {
+        isMeetingActive(time_start, time_end, week_day) {
             let now = new Date();
-            let currentDate = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+            if (now.getDay() - 1 != week_day) 
+                return false;
 
-            return currentDate > time_start && currentDate < time_end ? 1 : 0;
+            let hours = now.getHours() < 10 ? '0' + now.getHours() :now.getHours()
+            let currentDate = `${hours}:${now.getMinutes()}:${now.getSeconds()}`;
+
+
+            return currentDate > time_start && currentDate < time_end ? true : false;
         },
         getWeekDay(weekDay) {
             let weekDayIndex = parseInt(weekDay);

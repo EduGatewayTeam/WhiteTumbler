@@ -18,6 +18,9 @@ export default {
             schedule: state.getState().schedule
         };
     },
+    props: {
+        roomId: String,
+    },
     directives: {
         "b-popover": VBPopover
     },
@@ -105,16 +108,11 @@ export default {
                 type: "UPDATE_ROOM_SCHEDULE",
                 data: { activeRoom, rooms }
             });
-
+            await state.dispatch({ type: 'SET_DEFAULT_SCHEDULE' });
             // update local and global state
-            this.newMeetingProcessing = false;
-            //this.changeVisibility();  
-
+            this.schedule = this.schedule.map( day => { return { ...day, odd: null, even: null } });
+            this.newMeetingProcessing = false;  
             document.getElementById('dateTimeSVG').click();
-            
-
-            await state.dispatch({ type: "SET_DEFAULT_SCHEDULE" });
-            //this.schedule = state.schedule;
         },
         changeVisibility() {
             let createMeetingForm = document.getElementById(
@@ -133,7 +131,6 @@ export default {
             this.isVisible = !this.isVisible;
         },
         setSchedule() {
-            console.log(this.schedule);
             state.dispatch({
                 type: "SET_ROOM_SCHEDULE",
                 data: { schedule: this.schedule }
@@ -260,6 +257,13 @@ export default {
                 </span>
                 Update schedule
             </button>
+            <a
+                :href="this.roomId"
+                type="button"
+                class="btn p-2 m-2 border-0 bg-red-500 bg-red-600-hover text-white lh-1"
+            >
+                Start room
+            </a>
         </div>
     </div>
 </template>
