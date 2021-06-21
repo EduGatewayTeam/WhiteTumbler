@@ -69,7 +69,8 @@ function reducer(state = defaultState, action) {
         case 'UPDATE_ROOM_SCHEDULE':
             return {
                 ...state,
-                rooms: [ ...action.data.rooms]
+                rooms: [ ...action.data.rooms],
+                activeRoom: { ...action.data.activeRoom }
             };
         case 'SET_DEFAULT_SCHEDULE':
             console.log('SET_DEFAULT_SCHEDULE'.toLowerCase());

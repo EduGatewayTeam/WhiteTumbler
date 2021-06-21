@@ -87,6 +87,7 @@ export default {
                     type: "UPDATE_ROOM_SCHEDULE",
                     data: { activeRoom, rooms }
                 });
+                
             }
             
             this.meetingDeleteProcessing = false;
