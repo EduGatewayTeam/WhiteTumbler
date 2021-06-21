@@ -1,9 +1,18 @@
 import { createStore } from "redux";
 
+let defaultSchedule = [
+    { dayname: "monday", even: null, odd: null },
+    { dayname: "tuesday", even: null, odd: null },
+    { dayname: "wednesday", even: null, odd: null },
+    { dayname: "thursday", even: null, odd: null },
+    { dayname: "friday", even: null, odd: null },
+    { dayname: "saturday", even: null, odd: null }
+];
+
 let defaultState = {
     activeRoom: null,
     rooms: [],
-    schedule: [],
+    schedule: defaultSchedule,
     meetingsRecords: {
         "2d89adf7-1e9f-4ddc-a84f-d800d0b122a7" : 
         [
@@ -35,6 +44,8 @@ let defaultState = {
     }
 };
 
+
+
 function reducer(state = defaultState, action) {
     console.log(action);
     switch (action.type) {
@@ -55,15 +66,16 @@ function reducer(state = defaultState, action) {
                 ...state,
                 schedule: [...action.data.schedule],
             };
-        case 'SET_ACTIVE_ROOM_SCHEDULE':
+        case 'UPDATE_ROOM_SCHEDULE':
             return {
                 ...state,
-                activeRoom: { ...action.data.activeRoom },
+                rooms: [ ...action.data.rooms]
             };
         case 'SET_DEFAULT_SCHEDULE':
+            console.log('SET_DEFAULT_SCHEDULE'.toLowerCase());
             return{
                 ...state,
-                schedule: action.data.schedule
+                schedule: [...defaultSchedule]
             }
         default:
             return state;

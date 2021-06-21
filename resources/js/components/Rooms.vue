@@ -7,7 +7,7 @@ import state from "../state"; // import app state
 
 window.state = state;
 
-export default {
+const Rooms = {
     template: "#rooms-template",
     props: {
         roomsInit: Array
@@ -34,7 +34,6 @@ export default {
             },
             activeRoom: null,
             activeRoomIndex: null,
-            newMeetingProcessing: false,
             meetingName: "",
             updateRoomProcessing: false,
             dateTimeRange: null,
@@ -47,7 +46,7 @@ export default {
                 "friday",
                 "saturday",
                 "sunday"
-            ]
+            ],
         };
     },
     mounted() {
@@ -104,7 +103,6 @@ export default {
             $("#room-settings-modal").modal("show");
             this.activeRoomIndex = roomIndex;
         },
-
         deleteRoom(roomIndex) {
             $("#confirm-delete-modal").modal("show");
             this.activeRoomIndex = roomIndex;
@@ -138,73 +136,6 @@ export default {
         getDataTimeRange(dateTimeRange) {
             this.dateTimeRange = dateTimeRange;
         },
-        async updateSchedule() {
-            let currentState = state.getState();
-            let schedule = [...currentState.activeRoom.schedule];
-            this.newMeetingProcessing = true;
-
-            await currentState.schedule.forEach( (day, dayIndex) => {
-
-                if (day.even) {
-
-                    schedule.forEach( (item, index, object) => {
-                        if (item?.week_day == dayIndex && item?.day_type == 'even') {
-                            object.splice(index, 1);
-                        }
-                    });
-
-                    schedule.push({
-                        day_type: "even",
-                        week_day: dayIndex,
-                        time_start: this.dateLocalization(
-                            day.even[0],
-                            "hh:mm:ss"
-                        ),
-                        time_end: this.dateLocalization(day.even[1], "hh:mm:ss")
-                    });
-                }
-
-                if (day.odd) {
-
-                    schedule.forEach( (item, index, object) => {
-                        if (item?.week_day == dayIndex && item?.day_type == 'odd') {    
-                            object.splice(index, 1);
-                        } 
-                    });
-
-                    schedule.push({
-                        day_type: "odd",
-                        week_day: dayIndex,
-                        time_start: this.dateLocalization(
-                            day.odd[0],
-                            "hh:mm:ss"
-                        ),
-                        time_end: this.dateLocalization(day.odd[1], "hh:mm:ss")
-                    });
-                }
-            });
-
-            console.log('final schedule: ', schedule);
-
-            let response = await api.patch(`/room/${this.activeRoom.id}`, {
-                schedule
-            });
-
-            if (response.data.errors) {
-                this.$toast.error(`The schedule was NOT updated.`);
-            } else this.$toast.success(`The room schedule was updated.`);
-            
-            let activeRoom = { ...this.activeRoom, 'schedule':  schedule};
-            state.dispatch( { 'type': 'SET_ACTIVE_ROOM_SCHEDULE', 'data': { activeRoom } } );
-            
-            currentState = state.getState();
-
-            this.activeRoom = currentState.activeRoom;
-            console.log('new active room: ', currentState.activeRoom)
-            this.rooms = currentState.rooms;
-            this.newMeetingProcessing = false;
-            $("#roomPage").modal("hide");
-        },
         dateLocalization(meeting_date, output_format = "DD.MM.YY HH:mm") {
             let date = moment(meeting_date).format(output_format);
             return date;
@@ -218,7 +149,17 @@ export default {
         getWeekDay(weekDay) {
             let weekDayIndex = parseInt(weekDay);
             return this.weekDays[weekDayIndex];
-        }
+        },
+        updateRoom() {
+
+            let currentState = state.getState();
+            let updatedRooms = currentState.rooms;
+                        
+            this.rooms = updatedRooms ? updatedRooms : null;
+            this.activeRoom = updatedRooms[this.activeRoomIndex];
+        },
     }
 };
+
+export default Rooms;
 </script>

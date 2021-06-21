@@ -58,19 +58,10 @@
                     </span>
                 </div>
 
-                <div id="create-meeting-form" class="mt-2 d-flex align-items-center">
+                <div id="create-meeting-form" @click="updateRoom" class="mt-2 d-flex align-items-center">
                 
                     <schedule-meetings></schedule-meetings>
-                
-                    <div>
-                        <button @click="updateSchedule" type="button"
-                            class="btn p-2 m-2 border-0 bg-blue-500 bg-blue-600-hover text-white lh-1">
-                            <span v-if="newMeetingProcessing" class="spinner-border spinner-size-24" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </span>
-                            Update schedule
-                        </button>
-                    </div>
+            
                 </div>
 
             </div>
