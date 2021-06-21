@@ -81,8 +81,12 @@ export default {
                 this.$toast.success(`The room schedule was updated.`);
                 $(meetingId).remove();
 
-                let activeRoom = { ...currentState.activeRoom, 'schedule':  schedule};
-                state.dispatch( { 'type': 'SET_ACTIVE_ROOM_SCHEDULE', 'data': { activeRoom } } );
+                let activeRoom = { ...currentState.activeRoom, schedule: schedule };  
+                let rooms = currentState.rooms.map ( room => { return activeRoom.id == room.id ? activeRoom : room})
+                state.dispatch({
+                    type: "UPDATE_ROOM_SCHEDULE",
+                    data: { activeRoom, rooms }
+                });
             }
             
             this.meetingDeleteProcessing = false;
