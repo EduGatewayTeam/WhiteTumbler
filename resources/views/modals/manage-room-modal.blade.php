@@ -3,7 +3,7 @@
         <div v-if="activeRoom !== null" class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title" id="roomPageLabel">@{{ activeRoom . name }}</h5>
+                <h5 class="modal-title" @click="updateRoom" id="roomPageLabel">@{{ activeRoom . name }}</h5>
                 <button type="button" class="btn-close text-gray-50" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
@@ -52,7 +52,7 @@
                     </div>
                 </div> 
 
-                <div v-if="activeRoom.schedule.length === 0">
+                <div v-if="activeRoom.schedule.length == 0">
                     <span class="fs-4 text-gray-400">
                         {{ __('rooms.no-meetings') }}
                     </span>

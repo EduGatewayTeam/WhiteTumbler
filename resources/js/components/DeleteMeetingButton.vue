@@ -83,11 +83,12 @@ export default {
 
                 let activeRoom = { ...currentState.activeRoom, schedule: schedule };  
                 let rooms = currentState.rooms.map ( room => { return activeRoom.id == room.id ? activeRoom : room})
-                state.dispatch({
+                await state.dispatch({
                     type: "UPDATE_ROOM_SCHEDULE",
                     data: { activeRoom, rooms }
                 });
-                
+
+                document.getElementById('roomPageLabel').click();
             }
             
             this.meetingDeleteProcessing = false;
