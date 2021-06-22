@@ -102,7 +102,7 @@ export default {
                 this.$toast.error(`The schedule was NOT updated.`);
             } else this.$toast.success(`The room schedule was updated.`);
 
-            let activeRoom = { ...currentState.activeRoom, schedule: schedule };  
+            let activeRoom = { ...currentState.activeRoom, schedule: schedule };
             let rooms = currentState.rooms.map ( room => { return activeRoom.id == room.id ? activeRoom : room})
             state.dispatch({
                 type: "UPDATE_ROOM_SCHEDULE",
@@ -111,7 +111,7 @@ export default {
             await state.dispatch({ type: 'SET_DEFAULT_SCHEDULE' });
             // update local and global state
             this.schedule = this.schedule.map( day => { return { ...day, odd: null, even: null } });
-            this.newMeetingProcessing = false;  
+            this.newMeetingProcessing = false;
             document.getElementById('dateTimeSVG').click();
         },
         changeVisibility() {
@@ -258,7 +258,7 @@ export default {
                 Update schedule
             </button>
             <a
-                :href="this.roomId"
+                :href="`room/${this.roomId}/join`"
                 type="button"
                 class="btn p-2 m-2 border-0 bg-red-500 bg-red-600-hover text-white lh-1"
             >
