@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { VBPopover } from "bootstrap-vue";
+import { VBPopover } from "bootstrap-vue"; // импортируем библиотеку для отображения всплывающих окон
 
 export default {
     props: {

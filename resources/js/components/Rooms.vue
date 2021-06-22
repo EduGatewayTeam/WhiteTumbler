@@ -1,10 +1,11 @@
 <script>
-import jstz from "jstz"; // import lib for timezone detection
-import moment from "moment"; // import lib for manipulating dates
-import { VBPopover } from "bootstrap-vue"; // import lib for pop-overs
-import api from "../api"; // import instance of axios
-import state from "../state"; // import app state
+import jstz from "jstz"; // импорт библиотеки для работы с временной зоной
+import moment from "moment"; // импорт библиотеки для манипулирования датой
+import { VBPopover } from "bootstrap-vue"; // импортируем библиотеку для отображения всплывающих окон
+import api from "../api"; // импортируем HTTP-клиент
+import state from "../state"; // импортируем состояние приложения
 
+// для доступа из консоли браузера
 window.state = state;
 
 const Rooms = {
@@ -58,17 +59,20 @@ const Rooms = {
         });
     },
     methods: {
+        // установка активной комнаты
         setSelectedRoomIndex(index) {
             state.dispatch({
                 type: "SET_ACTIVE_ROOM",
                 data: { selectedRoomIndex: index }
             });
         },
+        // открываем окно для добавления модеров
         openModersModal(roomIndex) {
             this.activeRoom = this.rooms[roomIndex];
             this.activeRoomIndex = roomIndex;
             $("#set-moderators-modal").modal("show");
         },
+        // добавление модера
         async addNewModers() {
             this.updateRoomProcessing = true;
 
@@ -91,6 +95,7 @@ const Rooms = {
             });
             this.updateRoomProcessing = false;
         },
+        // поиск пользователей
         searchUsers(e) {
             let userName = e.target.value;
             console.log("Search user name: ", userName);
@@ -110,6 +115,7 @@ const Rooms = {
                 }
             });
         },
+        // создание комнаты
         createRoom() {
             if (!this.roomName) {
                 return;
@@ -141,19 +147,23 @@ const Rooms = {
                     this.roomCreateProcessing = false;
                 });
         },
+        // открытие модального окна управлени комнатой
         openRoom(roomIndex) {
             this.activeRoom = this.rooms[roomIndex];
             this.activeRoomIndex = roomIndex;
             $("#roomPage").modal("show");
         },
+        // открытие настроек комнаты
         openRoomSettings(roomIndex) {
             $("#room-settings-modal").modal("show");
             this.activeRoomIndex = roomIndex;
         },
+        // удаление комнаты
         deleteRoom(roomIndex) {
             $("#confirm-delete-modal").modal("show");
             this.activeRoomIndex = roomIndex;
         },
+        // подтверждение удаления
         deleteRoomConfirm() {
             this.roomDeleteProcessing = true;
 
@@ -180,13 +190,16 @@ const Rooms = {
                     this.roomDeleteProcessing = false;
                 });
         },
+        // получение интервала времени
         getDataTimeRange(dateTimeRange) {
             this.dateTimeRange = dateTimeRange;
         },
+        // форматирование даты
         dateLocalization(meeting_date, output_format = "DD.MM.YY HH:mm") {
             let date = moment(meeting_date).format(output_format);
             return date;
         },
+        // проверка активна ли встреча
         isMeetingActive(time_start, time_end, week_day) {
             let now = new Date();
             if (now.getDay() - 1 != week_day) 
@@ -198,10 +211,12 @@ const Rooms = {
 
             return currentDate > time_start && currentDate < time_end ? true : false;
         },
+        // получить название дня недели
         getWeekDay(weekDay) {
             let weekDayIndex = parseInt(weekDay);
             return this.weekDays[weekDayIndex];
         },
+        // обновление состояния компоненты
         updateRoom() {
             let currentState = state.getState();
             let updatedRooms = currentState.rooms;

@@ -1,5 +1,6 @@
 import { createStore } from "redux";
 
+// значение расписания по умолчанию
 let defaultSchedule = [
     { dayname: "monday", even: null, odd: null },
     { dayname: "tuesday", even: null, odd: null },
@@ -9,6 +10,7 @@ let defaultSchedule = [
     { dayname: "saturday", even: null, odd: null }
 ];
 
+// состояние приложения по умолчанию
 let defaultState = {
     activeRoom: null,
     rooms: [],
@@ -47,36 +49,40 @@ let defaultState = {
 
 
 function reducer(state = defaultState, action) {
-    console.log(action);
+    console.log('action: ', action);
     switch (action.type) {
+        // установка акстивной комнаты
         case "SET_ACTIVE_ROOM":
-            // создается асинхронный запрос для получения всех записей и они добавляются в state
             return {
                 ...state,
                 activeRoom: { ...state.rooms[action.data.selectedRoomIndex]}
             };
+        // установка комнат
         case "SET_ROOMS":
-            // устанавливаем комнаты в общий стейт
             return {
                 ...state,
                 rooms: [...action.data.rooms]
             };
+        // установка расписания комнаты
         case "SET_ROOM_SCHEDULE":
             return {
                 ...state,
                 schedule: [...action.data.schedule],
             };
+        // обновление расписания комнаты
         case 'UPDATE_ROOM_SCHEDULE':
             return {
                 ...state,
                 rooms: [ ...action.data.rooms],
                 activeRoom: { ...action.data.activeRoom }
             };
+        // установка начального расписания
         case 'SET_DEFAULT_SCHEDULE':
             return {
                 ...state,
                 schedule: [...defaultSchedule]
             }
+        // возвращаем стандартное значение состояния
         default:
             return state;
     }

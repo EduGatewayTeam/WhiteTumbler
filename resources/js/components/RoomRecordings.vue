@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import state from "../state";
+import state from "../state"; // импортируем состояние приложения
 
 let roomRecordings = {
     data() {
@@ -40,6 +40,7 @@ let roomRecordings = {
         console.log("meetingsRecords: ", this.meetingsRecords);
     },
     methods: {
+        // отображение записей
         displayRecords() {
             let currentState = state.getState();
             let tbody = document.getElementById("recordsTable");

@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import { VBPopover } from "bootstrap-vue";
-import api from "../api";
-import state from "../state";
+import { VBPopover } from "bootstrap-vue"; // импортируем библиотеку для отображения всплывающих окон
+import api from "../api"; // импортируем HTTP-клиент
+import state from "../state"; // импортируем состояние приложения
 
 export default {    
     props: {
@@ -51,6 +51,7 @@ export default {
         };
     },
     methods: {
+        // удаление встречи
         async deleteMeeting() {
             if (this.meetingDeleteProcessing) {
                 return;

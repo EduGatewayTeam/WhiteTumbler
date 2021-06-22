@@ -1,12 +1,12 @@
 <script>
-import DatePicker from "vue2-datepicker";
-import { VBPopover } from "bootstrap-vue";
-import moment from "moment"; // import lib for manipulating dates
-import api from "../api"; // import instance of axios
+import DatePicker from "vue2-datepicker"; // ипорт компонента для выбора интервала времени
+import { VBPopover } from "bootstrap-vue"; // импортируем библиотеку для отображения всплывающих окон
+import moment from "moment"; // импортируем библиотеку для работы с временем
+import api from "../api"; // импортируем HTTP-клиент
+import state from "../state"; // импортируем состояние приложения
 
+// импортируем стили для компоненты выбора времени
 import "vue2-datepicker/index.css";
-
-import state from "../state";
 
 export default {
     components: { DatePicker },

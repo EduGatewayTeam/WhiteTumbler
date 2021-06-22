@@ -1,6 +1,6 @@
 <script>
-import DatePicker from "vue2-datepicker";
-import { VBPopover } from "bootstrap-vue";
+import DatePicker from "vue2-datepicker"; // ипорт компонента для выбора интервала времени
+import { VBPopover } from "bootstrap-vue"; // импортируем библиотеку для отображения всплывающих окон
 
 import "vue2-datepicker/index.css";
 

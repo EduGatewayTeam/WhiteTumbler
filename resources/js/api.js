@@ -1,10 +1,10 @@
-// import library for requests
+//импортируем библиотеку 
 import axios from "axios";
 
-// create axios instance
+// создаем HTTP-клиент
 const api = axios.create();
 
-// set default settings
+// устанавливаем стандартные настройки
 api.defaults.withCredentials = true;
 api.defaults.headers.common["Content-Type"] = "application/json";
 

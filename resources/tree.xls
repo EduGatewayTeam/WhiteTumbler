@@ -1,0 +1,40 @@
++---js
+|   |   api.js
+|   |   app.js
+|   |   config.js
+|   |   state.js
+|   |   
+|   \---components
+|           CopyToClipboard.vue
+|           DateTimePicker.vue
+|           DeleteMeetingButton.vue
+|           RoomRecordings.vue
+|           Rooms.vue
+|           ScheduleMeetings.vue
+|           
++---lang
+|   \---en
+|           auth.php
+|           pagination.php
+|           passwords.php
+|           rooms.php
+|           validation.php
+|           
++---scss
+|       app.scss
+|       
+\---views
+    |   base.blade.php
+    |   expiredMeeting.blade.php
+    |   index.blade.php
+    |   layout.blade.php
+    |   login.blade.php
+    |   waitMeeting.blade.php
+    |   
+    \---modals
+            add-room-modal.blade.php
+            confirm-delete-modal.blade.php
+            manage-room-modal.blade.php
+            room-settings-modal.blade.php
+            set-moderators-room-modal.blade.php
+            

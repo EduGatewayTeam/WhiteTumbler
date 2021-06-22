@@ -1,3 +1,4 @@
+// настройка уведомлений
 export const toast_options = {
     position: "top-right",
     timeout: 2500,
