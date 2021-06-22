@@ -204,7 +204,7 @@ class User implements Authenticatable
      */
     public function getAbbreviatedFullName(): string
     {
-        return $this->surname.' '.$this->name[0].'.';
+        return $this->surname . ' ' . mb_substr($this->name, 0, 1) . '.';
     }
 
     /**

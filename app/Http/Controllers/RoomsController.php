@@ -103,9 +103,7 @@ class RoomsController extends Controller
         $repository = $em->getRepository(Room::class);
 
         try {
-            /**
-             * @var Room
-             */
+            /** @var Room */
             $room = $repository->find($roomId);
         } catch (Exception $e) {
             abort(404);
@@ -116,9 +114,7 @@ class RoomsController extends Controller
             abort(404);
         }
 
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = Auth::user();
 
         if ($room->getMeeting() == null) {
@@ -130,9 +126,7 @@ class RoomsController extends Controller
             }
         }
 
-        /**
-         * @var Meeting
-         */
+        /** @var Meeting */
         $meeting = $room->getMeeting();
 
         // if manual meeting is not running - remove, recreate?
@@ -142,7 +136,7 @@ class RoomsController extends Controller
         $createMeetingParams->setAttendeePassword($meeting->getAttendeePassword());
         $response = $bbb->createMeeting($createMeetingParams);
 
-        $moderator = $room->getCreator()->getId() == $user->getId();
+        $moderator = $room->getCreator()->getId() == $user->getId() || $room->getModerators()->contains($user);
 
         $joinMeetingParams = new JoinMeetingParameters($meeting->id, $user->getFullName(),
             $moderator ? $response->getModeratorPassword() : $response->getAttendeePassword());
@@ -163,9 +157,7 @@ class RoomsController extends Controller
      * @Middleware("auth")
      */
     public function addModerator($roomId, Request $request, EntityManagerInterface $em) {
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = Auth::user();
 
         $moderatorId = $request->get('moderator_id');
@@ -173,18 +165,14 @@ class RoomsController extends Controller
         $roomsRepository = $em->getRepository(Room::class);
         $usersRepository = $em->getRepository(User::class);
 
-        /**
-         * @var Room
-         */
+        /** @var Room */
         $room = $roomsRepository->find($roomId);
 
         if ($room->getCreator()->getId() != $user->getId()) {
             abort(403);
         }
 
-        /**
-         * @var User
-         */
+        /** @var User */
         $moderator = $usersRepository->find($moderatorId);
 
         $room->addModerator($moderator);
@@ -202,9 +190,7 @@ class RoomsController extends Controller
      * @Middleware("auth")
      */
     public function removeModerator($roomId, Request $request, EntityManagerInterface $em) {
-        /**
-         * @var User
-         */
+        /** @var User */
         $user = Auth::user();
 
         $moderatorId = $request->get('moderator_id');
@@ -212,18 +198,14 @@ class RoomsController extends Controller
         $roomsRepository = $em->getRepository(Room::class);
         $usersRepository = $em->getRepository(User::class);
 
-        /**
-         * @var Room
-         */
+        /** @var Room */
         $room = $roomsRepository->find($roomId);
 
         if ($room->getCreator()->getId() != $user->getId()) {
             abort(403);
         }
 
-        /**
-         * @var User
-         */
+        /** @var User */
         $moderator = $usersRepository->find($moderatorId);
 
         $room->removeModerator($moderator);
