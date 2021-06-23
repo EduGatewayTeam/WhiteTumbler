@@ -9,16 +9,16 @@
             </div>
 
             <div class="modal-body">
-              
+
                 <div v-for="(item, index) in activeRoom.schedule">
-                    
+
                     <div :id="`${item.day_type}_${getWeekDay(item.week_day)}`" class="p-2 d-flex align-items-center justify-content-between">
                         <div class="d-flex align-items-center">
                             <div v-if="isMeetingActive(item.time_start, item.time_end, item.week_day) > 0" class="spinner-grow spinner-grow-sm text-danger"
                                 role="status">
                                 <span class="visually-hidden">Loading...</span>
                             </div>
-    
+
                             <i v-else class="fa fa-podcast" style="color: #2563eb !important"></i>
                             <span class="ms-3" style="font-weight: bold !important;">@{{ item.day_type + ' ' + getWeekDay(item.week_day) }}</span>
                             <span class="ms-3">@{{ item . time_start }}</span>
@@ -29,8 +29,8 @@
                         <div class="d-flex justify-content-end">
 
                             <delete-meeting :meetingWeekDay='`${item.week_day}`' :meetingDayType='`${item.day_type}`' :meetingWeekDayName='`${getWeekDay(item.week_day)}`'></delete-meeting>
-                            
-                            <a :href="`/room/${item.id}/join`"
+
+                            <a :href="`/room/${activeRoom.id}/join`"
                                 class="btn p-2 lh-1 rounded-circle bg-blue-50 bg-blue-400-hover"
                                 v-b-popover.hover.top="'Go to meeting'"
                             >
@@ -50,7 +50,7 @@
                         </div>
 
                     </div>
-                </div> 
+                </div>
 
                 <div v-if="activeRoom.schedule.length == 0">
                     <span class="fs-4 text-gray-400">
@@ -59,9 +59,9 @@
                 </div>
 
                 <div id="create-meeting-form" @click="updateRoom" class="mt-2 d-flex align-items-center">
-                
+
                     <schedule-meetings :roomId="activeRoom.id"></schedule-meetings>
-            
+
                 </div>
 
             </div>

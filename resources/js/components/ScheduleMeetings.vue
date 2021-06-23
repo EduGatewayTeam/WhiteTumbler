@@ -64,7 +64,7 @@ export default {
                         week_day: dayIndex,
                         time_start: this.dateLocalization(
                             day.even[0],
-                            "hh:mm:ss"
+                            "HH:mm:ss"
                         ),
                         time_end: this.dateLocalization(day.even[1], "HH:mm:ss")
                     });
@@ -85,7 +85,7 @@ export default {
                         week_day: dayIndex,
                         time_start: this.dateLocalization(
                             day.odd[0],
-                            "hh:mm:ss"
+                            "HH:mm:ss"
                         ),
                         time_end: this.dateLocalization(day.odd[1], "HH:mm:ss")
                     });
