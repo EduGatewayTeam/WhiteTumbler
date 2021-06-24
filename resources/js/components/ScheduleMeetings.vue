@@ -108,6 +108,11 @@ export default {
                 type: "UPDATE_ROOM_SCHEDULE",
                 data: { activeRoom, rooms }
             });
+            state.dispatch({
+                type: "SET_ACTIVE_ROOM",
+                data: { activeRoom }
+            });
+
             await state.dispatch({ type: 'SET_DEFAULT_SCHEDULE' });
             // update local and global state
             this.schedule = this.schedule.map( day => { return { ...day, odd: null, even: null } });

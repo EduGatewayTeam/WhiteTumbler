@@ -109,6 +109,8 @@ const Rooms = {
         // поиск пользователей
         searchUsers(e) {
             let userName = e.target.value;
+            if (e.target.value.length < 3) 
+                return 
             console.log("Search user name: ", userName);
             $("#usersList").html(`<option>Loading...</option>`);
             api.post("/search", {
@@ -229,11 +231,12 @@ const Rooms = {
         },
         // обновление состояния компоненты
         updateRoom() {
-            let currentState = state.getState();
-            let updatedRooms = currentState.rooms;
+            let activeRoom = state.getState().activeRoom;
+            let unique = true;
 
-            this.rooms = updatedRooms ? updatedRooms : null;
-            this.activeRoom = updatedRooms[this.activeRoomIndex];
+            this.rooms.forEach( room => { room.id == activeRoom.id ? unique = false : ""} )
+            unique ?  this.rooms.push(activeRoom) : ''
+            this.activeRoom = activeRoom;
         }
     }
 };
