@@ -55,7 +55,7 @@ function reducer(state = defaultState, action) {
         case "SET_ACTIVE_ROOM":
             return {
                 ...state,
-                activeRoom: { ...state.rooms[action.data.selectedRoomIndex]}
+                activeRoom: { ...action.data.activeRoom }
             };
         // установка комнат
         case "SET_ROOMS":

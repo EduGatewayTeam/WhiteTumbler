@@ -36,7 +36,7 @@ Rooms
                 <div class="row">
                     <div v-for="(room, index) in rooms" class="col-12 col-sm-6 col-md-4 col-lg-3 mt-3">
 
-                        <div class="bg-white rounded-3" @click="setSelectedRoomIndex(index)">
+                        <div class="bg-white rounded-3" @click="setSelectedRoom(room)">
 
                             <div @click="openRoom(index)" class="d-flex align-items-center bg-blue-800 p-2 rounded-top-3">
                                 <i class="fas fa-chalkboard-teacher text-white"> </i>

@@ -34,7 +34,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary"
                     data-bs-dismiss="modal">{{ __('rooms.cancel') }}</button>
-                <button :disabled="updateRoomProcessing" type="button"
+                <button :disabled="updateRoomProcessing" type="button" @click="setSettings"
                     class="d-flex align-items-center btn text-white bg-blue-500 bg-blue-600-hover">
                     <span v-show="updateRoomProcessing" class="spinner-border spinner-border-sm" role="status">
                         <span class="visually-hidden">Loading...</span>

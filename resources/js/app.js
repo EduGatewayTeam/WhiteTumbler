@@ -20,7 +20,6 @@ import "vue-toastification/dist/index.css";
 // импортируем конфигурацию уведомлений
 import { toast_options } from "./config";
 
-
 // регистрируем собственные компоненты
 Vue.component("copy-link-to-clipboard", CopyToClipboard);
 Vue.component("delete-meeting", DeleteMeting);

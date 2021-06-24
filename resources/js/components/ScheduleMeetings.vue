@@ -45,7 +45,7 @@ export default {
         },
         async updateSchedule() {
             let currentState = state.getState();
-            let schedule = [...currentState.activeRoom.schedule];
+            let schedule = currentState.activeRoom.schedule ? [...currentState.activeRoom.schedule] : [];
             this.newMeetingProcessing = true;
 
             await currentState.schedule.forEach((day, dayIndex) => {

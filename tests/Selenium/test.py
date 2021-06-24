@@ -23,32 +23,47 @@ driver = webdriver.Chrome()
 driver.get(BASE_URL)
 
 # Auth
+print('Начало процесса авторизации.')
 find_interactive_element(driver, By.LINK_TEXT, 'Lecturer').click()
 find_interactive_element(driver, By.ID, 'username').send_keys('test3')
 find_interactive_element(driver, By.ID, 'password').send_keys('test123')
 find_interactive_element(driver, By.ID, 'kc-login').click()
+print('Вход выполнен.')
 
 # Create room
-find_interactive_element(driver, By.XPATH, "//button[@data-bs-target='#add-room-modal']").click()
+create_room_modal = find_interactive_element(driver, By.XPATH, "//button[@data-bs-target='#add-room-modal']")
+create_room_button.click()
 driver.implicitly_wait(5)
 find_interactive_element(driver, By.ID, 'inputRoomCreateName').send_keys('Test room')
-find_interactive_element(driver, By.XPATH, "//button[.//span[contains(text(), 'Create')]]").click()
+create_room_button = find_interactive_element(driver, By.XPATH, "//button[.//span[contains(text(), 'Create')]]")
+create_room_button.click()
+if (create_room_button):
+	print("Создание тестовой комнаты...")
 
 # Join room
-find_interactive_element(driver, By.LINK_TEXT, 'Test room').click()
-find_interactive_element(driver, By.LINK_TEXT, 'Start room').click()
-
+test_rooom = find_interactive_element(driver, By.LINK_TEXT, 'Test room')
+if (test_rooom):
+	print("Тестовая комната создана.")
+test_rooom.click()
+print('Начало митинга.')
+start_room_button = find_interactive_element(driver, By.LINK_TEXT, 'Start room')
+start_room_button.click()
+# if bbb in url: 
+print('Переход выполнен успешно.')
 driver.implicitly_wait(15)
 
 # Back
 driver.get(BASE_URL)
 
+
+
 # Remove room
+print('Удаление комнаты...')
 find_interactive_element(driver, By.XPATH, "//div[./div[./a[contains(text(), 'Test room')]]]/div/div/button/i[@class='fa fa-trash']").click()
 time.sleep(5)
 find_interactive_element(driver, By.XPATH, "//button[.//span[contains(text(), 'Delete room')]]").click()
 # find_interactive_element(driver, By.CLASS_NAME, 'btn-close').click()
-
+print('Комната удалена.')
 time.sleep(20)
 
 driver.close()

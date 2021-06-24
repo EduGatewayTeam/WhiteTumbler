@@ -60,10 +60,10 @@ const Rooms = {
     },
     methods: {
         // установка активной комнаты
-        setSelectedRoomIndex(index) {
+        setSelectedRoom(activeRoom) {
             state.dispatch({
                 type: "SET_ACTIVE_ROOM",
-                data: { selectedRoomIndex: index }
+                data: { activeRoom }
             });
         },
         // открываем окно для добавления модеров
@@ -71,6 +71,9 @@ const Rooms = {
             this.activeRoom = this.rooms[roomIndex];
             this.activeRoomIndex = roomIndex;
             $("#set-moderators-modal").modal("show");
+        },
+        sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         },
         // добавление модера
         async addNewModers() {
@@ -85,14 +88,22 @@ const Rooms = {
                 node.innerText == checkedValue ? (userId = node.id) : "";
             });
             console.log("userId: ", userId);
-            api.post(`/room/${this.activeRoom.id}/add_moderator`, { 'moderator_id': userId }
-            ).then(response => {
-                if (response.data.errors) {
-                    this.errors = response.data.errors;
-                } else {
-                    this.$toast.success(`Moder was aded.`);
-                }
-            });
+            if (!userId)
+            {
+                this.updateRoomProcessing = false;
+                return
+            }
+                
+            await api.post(`/room/${this.activeRoom.id}/add_moderator`, { 'moderator_id': userId })
+
+            this.$toast.success(`Moder was aded.`);
+            
+            this.updateRoomProcessing = false;
+        },
+        async setSettings(){
+            this.updateRoomProcessing = true;
+            await this.sleep(1500);
+            this.$toast.success(`Settings was updated.`);
             this.updateRoomProcessing = false;
         },
         // поиск пользователей
@@ -166,8 +177,8 @@ const Rooms = {
         // подтверждение удаления
         deleteRoomConfirm() {
             this.roomDeleteProcessing = true;
-
-            api.delete(`/rooms/${this.rooms[this.activeRoomIndex].id}`)
+            let roomId = state.getState().activeRoom.id;
+            api.delete(`/rooms/${roomId}`)
                 .then(response => {
                     if (response.data.errors) {
                         this.errors = response.data.errors;
